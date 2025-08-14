@@ -28,6 +28,6 @@ Thumbs.db
 
 # Logs / Data / Temporary
 *.log
-data/replays/
-data/raw_api/
-data/reports/
+backend/data/replays/
+backend/data/raw_api/
+backend/data/reports/
