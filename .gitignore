@@ -1,33 +1,38 @@
-# Python / Backend
+# Python
 __pycache__/
 *.py[cod]
-*.pyo
-*.pyd
-backend/venv/
-backend/env/
-backend/.venv/
-backend/.env
+*.egg
+*.egg-info/
+dist/
+build/
 
-# Node / Frontend
-frontend/node_modules/
-frontend/build/
-frontend/dist/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# Virtual environments
+venv/
+.env
 
-# IDEs and Editors
+# Logs
+*.log
+
+# IDE / Editor settings
 .vscode/
 .idea/
-*.sublime-project
-*.sublime-workspace
 
-# OS Files
-.DS_Store
-Thumbs.db
+# Node.js (for frontend)
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
 
-# Logs / Data / Temporary
-*.log
+# Frontend build output
+frontend/build/
+frontend/dist/
+
+# Project data & generated outputs
 backend/data/replays/
 backend/data/raw_api/
+backend/data/processed/
 backend/data/reports/
+
+# OS files
+.DS_Store
+Thumbs.db

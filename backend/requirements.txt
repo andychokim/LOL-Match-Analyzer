@@ -1,5 +1,22 @@
+# Server & API
 fastapi
-uvicorn
-requests
+uvicorn[standard]
 python-dotenv
-python-multipart
+requests
+
+# Data processing
+pandas
+numpy
+
+# AI/ML (for analysis)
+torch
+transformers
+openai
+
+# Utilities
+tqdm
+logging
+
+# Testing
+pytest
+patch
