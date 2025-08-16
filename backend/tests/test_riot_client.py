@@ -1,7 +1,8 @@
 import pytest
-from unittest.mock import patch, ANY
-from src.riot_api.riot_client import get_PUUID, get_recentMatches, get_matchDetails
+from unittest.mock import patch, Mock, ANY
+from requests.exceptions import HTTPError
 
+from src.riot_api.riot_client import get_PUUID, get_recentMatches, get_matchDetails, RiotAPIError
 
 @pytest.mark.riot_client
 class TestGetPUUID:
@@ -43,13 +44,17 @@ class TestGetPUUID:
         (504, "Gateway timeout")
     ])
     def test_get_PUUID_error(self, mock_get, status_code, error_message):
-        mock_get.return_value.status_code = status_code
-        mock_get.return_value.text = error_message
+        # Mock the response to simulate an error
+        mock_response = Mock()
+        mock_response.status_code = status_code
+        mock_response.text = error_message
+        mock_response.raise_for_status.side_effect = HTTPError(f"HTTP Error: {status_code}", response=mock_response)
+        mock_get.return_value = mock_response
 
-        with pytest.raises(Exception) as exc_info:
+        with pytest.raises(RiotAPIError) as exc_info:
             get_PUUID(self.gameName, self.tagLine)
         
-        assert str(exc_info.value) == f"Error fetching PUUID: {status_code} - {error_message}"
+        assert str(exc_info.value) == f"API request failed: {status_code} - {error_message}"
         mock_get.assert_called_once()
 
 
@@ -93,14 +98,18 @@ class TestGetRecentMatches:
         (504, "Gateway timeout")
     ])
     def test_get_recentMatches_error(self, mock_get, status_code, error_message):
-        mock_get.return_value.status_code = status_code
-        mock_get.return_value.text = error_message
+        # Mock the response to simulate an error
+        mock_response = Mock()
+        mock_response.status_code = status_code
+        mock_response.text = error_message
+        mock_response.raise_for_status.side_effect = HTTPError(f"HTTP Error: {status_code}", response=mock_response)
+        mock_get.return_value = mock_response
 
         mock_PUUID = "1234-5678-8765-4321"
-        with pytest.raises(Exception) as exc_info:
+        with pytest.raises(RiotAPIError) as exc_info:
             get_recentMatches(mock_PUUID, count=3)
         
-        assert str(exc_info.value) == f"Error fetching recent matches: {status_code} - {error_message}"
+        assert str(exc_info.value) == f"API request failed: {status_code} - {error_message}"
         mock_get.assert_called_once()
 
 
@@ -145,11 +154,15 @@ class TestGetMatchDetails:
         (504, "Gateway timeout")
     ])
     def test_get_matchDetails_error(self, mock_get, status_code, error_message):
-        mock_get.return_value.status_code = status_code
-        mock_get.return_value.text = error_message
+        # Mock the response to simulate an error
+        mock_response = Mock()
+        mock_response.status_code = status_code
+        mock_response.text = error_message
+        mock_response.raise_for_status.side_effect = HTTPError(f"HTTP Error: {status_code}", response=mock_response)
+        mock_get.return_value = mock_response
 
-        with pytest.raises(Exception) as exc_info:
+        with pytest.raises(RiotAPIError) as exc_info:
             get_matchDetails(self.matchId)
         
-        assert str(exc_info.value) == f"Error fetching match details: {status_code} - {error_message}"
+        assert str(exc_info.value) == f"API request failed: {status_code} - {error_message}"
         mock_get.assert_called_once()
