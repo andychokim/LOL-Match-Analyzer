@@ -4,7 +4,7 @@ from requests.exceptions import HTTPError
 
 from src.riot_api.riot_client import get_PUUID, get_recentMatches, get_matchDetails, RiotAPIError
 
-@pytest.mark.riot_client
+@pytest.mark.riot_client_puuid
 class TestGetPUUID:
     """
     Test suite for the get_PUUID function.
@@ -58,7 +58,7 @@ class TestGetPUUID:
         mock_get.assert_called_once()
 
 
-@pytest.mark.riot_client
+@pytest.mark.riot_client_matches
 class TestGetRecentMatches:
     """
     Test suite for the get_recent_matches function.
@@ -113,7 +113,7 @@ class TestGetRecentMatches:
         mock_get.assert_called_once()
 
 
-@pytest.mark.riot_client
+@pytest.mark.riot_client_details
 class TestGetMatchDetails:
     """
     Test suite for the get_match_details function.
