@@ -119,3 +119,40 @@ class TestServerDetails:
         assert response.status_code == 500
         assert response.json() == {"detail": "Internal Server Error: Match details fetch error - unexpected"}
         mock_get_matchDetails.assert_called_once_with("test-match-id")
+
+@pytest.mark.server_timeline
+class TestServerTimeline:
+    """
+    This includes tests for fetching match timeline.
+    """
+
+    @patch("src.riot_api.riot_client.get_matchTimeline")
+    def test_fetch_match_timeline_success(self, mock_get_matchTimeline):
+        mock_details = {"match_id": "test-match-id", "info": "details"}
+        mock_get_matchTimeline.return_value = mock_details
+
+        response = client.get("/match-timeline/test-match-id")
+
+        assert response.status_code == 200
+        assert response.json() == {"match_timeline": mock_details}
+        mock_get_matchTimeline.assert_called_once_with("test-match-id")
+    
+    @patch("src.riot_api.riot_client.get_matchTimeline")
+    def test_fetch_match_timeline_failure_404(self, mock_get_matchTimeline):
+        mock_get_matchTimeline.side_effect = RiotAPIError("Match timeline fetch error - API failure")
+
+        response = client.get("/match-timeline/test-match-id")
+
+        assert response.status_code == 404
+        assert response.json() == {"detail": "Match timeline fetch error - API failure"}
+        mock_get_matchTimeline.assert_called_once_with("test-match-id")
+
+    @patch("src.riot_api.riot_client.get_matchTimeline")
+    def test_fetch_match_timeline_failure_500(self, mock_get_matchTimeline):
+        mock_get_matchTimeline.side_effect = Exception("Match timeline fetch error - unexpected")
+
+        response = client.get("/match-timeline/test-match-id")
+
+        assert response.status_code == 500
+        assert response.json() == {"detail": "Internal Server Error: Match timeline fetch error - unexpected"}
+        mock_get_matchTimeline.assert_called_once_with("test-match-id")

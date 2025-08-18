@@ -2,7 +2,7 @@ import pytest
 from unittest.mock import patch, Mock, ANY
 from requests.exceptions import HTTPError
 
-from src.riot_api.riot_client import get_PUUID, get_recentMatches, get_matchDetails, RiotAPIError
+from src.riot_api.riot_client import get_PUUID, get_recentMatches, get_matchDetails, get_matchTimeline, RiotAPIError
 
 @pytest.mark.riot_client_puuid
 class TestGetPUUID:
@@ -61,7 +61,7 @@ class TestGetPUUID:
 @pytest.mark.riot_client_matches
 class TestGetRecentMatches:
     """
-    Test suite for the get_recent_matches function.
+    Test suite for the get_recentMatches function.
     """
     def setup_method(self):
         self.puuid = "1234-5678-8765-4321"
@@ -116,7 +116,7 @@ class TestGetRecentMatches:
 @pytest.mark.riot_client_details
 class TestGetMatchDetails:
     """
-    Test suite for the get_match_details function.
+    Test suite for the get_matchDetails function.
     """
     def setup_method(self):
         self.matchId = "matchID_1"
@@ -163,6 +163,60 @@ class TestGetMatchDetails:
 
         with pytest.raises(RiotAPIError) as exc_info:
             get_matchDetails(self.matchId)
+        
+        assert str(exc_info.value) == f"API request failed: {status_code} - {error_message}"
+        mock_get.assert_called_once()
+
+@pytest.mark.riot_client_timeline
+class TestGetMatchTimeline:
+    """
+    Test suite for the get_matchTimeline function.
+    """
+    def setup_method(self):
+        self.matchId = "matchID_1"
+
+    # Test for successful match details retrieval
+    @patch("src.riot_api.riot_client.requests.get")
+    def test_get_matchTimeLine(self, mock_get):
+        response = {
+            "metadata": {"dataVersion": "1", "matchId": "matchID_1", "participants": []},
+            "info": {"gameId": 123456789}
+        }
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.json.return_value = response
+
+        match_timeline = get_matchTimeline(self.matchId)
+
+        assert match_timeline == response # Expected match details from mock response
+
+        expected_url = f"https://americas.api.riotgames.com/lol/match/v5/matches/{self.matchId}/timeline"
+        mock_get.assert_called_once_with(expected_url, headers={"X-Riot-Token": ANY})
+
+    # Test for get_match_details error handling 
+    @patch("src.riot_api.riot_client.requests.get")
+    @pytest.mark.parametrize("status_code, error_message", [
+        (400, "Bad request"),
+        (401, "Unauthorized"),
+        (403, "Forbidden"),
+        (404, "Data not found"),
+        (405, "Method not allowed"),
+        (415, "Unsupported media type"),
+        (429, "Rate limit exceeded"),
+        (500, "Internal server error"),
+        (502, "Bad gateway"),
+        (503, "Service unavailable"),
+        (504, "Gateway timeout")
+    ])
+    def test_get_matchTimeline_error(self, mock_get, status_code, error_message):
+        # Mock the response to simulate an error
+        mock_response = Mock()
+        mock_response.status_code = status_code
+        mock_response.text = error_message
+        mock_response.raise_for_status.side_effect = HTTPError(f"HTTP Error: {status_code}", response=mock_response)
+        mock_get.return_value = mock_response
+
+        with pytest.raises(RiotAPIError) as exc_info:
+            get_matchTimeline(self.matchId)
         
         assert str(exc_info.value) == f"API request failed: {status_code} - {error_message}"
         mock_get.assert_called_once()

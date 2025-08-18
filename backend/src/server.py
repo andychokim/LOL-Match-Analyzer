@@ -53,3 +53,16 @@ def fetch_matchDetails(match_id: str):
         raise HTTPException(status_code=404, detail=str(error))
     except Exception as error:
         raise HTTPException(status_code=500, detail="Internal Server Error: " + str(error))
+    
+@app.get("/match-timeline/{match_id}")
+def fetch_matchDetails(match_id: str):
+    """
+    Returns detailed timeline for a given match ID.
+    """
+    try:
+        details = riot_client.get_matchTimeline(match_id)
+        return {"match_timeline": details}
+    except RiotAPIError as error:
+        raise HTTPException(status_code=404, detail=str(error))
+    except Exception as error:
+        raise HTTPException(status_code=500, detail="Internal Server Error: " + str(error))

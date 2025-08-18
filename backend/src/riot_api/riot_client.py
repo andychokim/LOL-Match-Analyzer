@@ -112,4 +112,22 @@ def get_matchDetails(match_id:str) -> dict[str, Any]:
     logger.info(f"Fetching match details for match ID {match_id} from {url}")
 
     return send_request(url)
+
+def get_matchTimeline(match_id:str) -> dict[str, Any]:
+    """
+    Fetches the timeline information about a specific match using its match ID.
+
+    Args:
+        match_id (str): The ID of the match to fetch timeline for.
+    
+    Returns:
+        dict: A dictionary containing match timeline.
+
+    Raises:
+        Exception: If the API request fails or returns an error.
+    """
+    url = f"https://{REGION}.api.riotgames.com/lol/match/v5/matches/{match_id}/timeline"
+    logger.info(f"Fetching match timeline for match ID {match_id} from {url}")
+
+    return send_request(url)
     
