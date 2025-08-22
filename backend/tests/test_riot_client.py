@@ -1,3 +1,5 @@
+# Test suite for Riot API client functions
+
 import pytest
 from unittest.mock import patch, Mock, ANY
 from requests.exceptions import HTTPError

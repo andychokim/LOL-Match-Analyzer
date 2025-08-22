@@ -36,3 +36,6 @@ backend/data/reports/
 # OS files
 .DS_Store
 Thumbs.db
+
+# etc
+temp.txt
