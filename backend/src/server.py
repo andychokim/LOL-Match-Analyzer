@@ -55,7 +55,7 @@ def fetch_matchDetails(match_id: str):
         raise HTTPException(status_code=500, detail="Internal Server Error: " + str(error))
     
 @app.get("/match-timeline/{match_id}")
-def fetch_matchDetails(match_id: str):
+def fetch_matchEvents(match_id: str):
     """
     Returns detailed timeline for a given match ID.
     """
