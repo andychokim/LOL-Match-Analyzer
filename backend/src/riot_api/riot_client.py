@@ -10,7 +10,7 @@ Version: 1.1
 import logging
 from typing import Any
 import requests
-from src.config import REGION, HEADERS
+from src.utils.config import REGION, HEADERS
 
 # Configure logging
 logging.basicConfig(level = logging.INFO)

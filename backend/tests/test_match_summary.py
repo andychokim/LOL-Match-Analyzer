@@ -3,7 +3,7 @@
 import pytest
 from unittest.mock import patch, Mock, ANY
 
-from src.analysis.match_summary import get_matchStats, get_matchTimeData, get_playerSummary
+from src.analysis.match_summary import get_playerMatchDetails, get_playerMatchTimeline, get_playerSummary
 
 mock_puuid = "test-puuid"
 mock_matchId = "test-match-id"
@@ -18,7 +18,7 @@ class TestPlayerAnalysisStats:
         response = {"stats": "test-stats"}
         mock_matchDetails.return_value = response
 
-        stats = get_matchStats(mock_puuid, mock_matchId)
+        stats = get_playerMatchDetails(mock_puuid, mock_matchId)
 
         assert stats == response["stats"]
 
@@ -30,52 +30,59 @@ class TestPlayerAnalysisTimeData:
     @patch("src.analysis.match_summary.get_matchTimeline")
     def test_get_matchTimeData(self, mock_matchTimeline):
         response = {
-            "metadata": {
-                "participants": [
-                    "test-puuid",
-                    "other-puuid"
-                ]
-            },
             "info": {
                 "frames": [
                     {
                         "events": [
-                            {
-                                "participantId": 1, 
-                                "type": "ITEM_PURCHASED"
-                            },
-                            {
-                                "killerId": 1, 
-                                "type": "CHAMPION_KILL"
-                            },
-                            {
-                                "victimId": 2, 
-                                "type": "CHAMPION_KILL"
-                            },
-                            {
-                                "participantId": 2, 
-                                "type": "WARD_PLACED"
-                            }
+                            {"killerId": 2, "type": "CHAMPION_KILL", "assistingParticipantIds": [1]},
+                            {"killerId": 1, "type": "BUILDING_KILL"},
+                            {"killerId": 1, "type": "TURRET_PLATE_DESTROYED"},
+                            {"type": "DRAGON_SOUL_GIVEN", "teamId": 0},
+                            {"type": "ELITE_MONSTER_KILL", "killerId": 2, "assistingParticipantIds": [3], "killerTeamId": 100},
+                            {"type": "FEAT_UPDATE", "teamId": 100},
+                            # Should NOT be included:
+                            {"killerId": 2, "type": "TURRET_PLATE_DESTROYED"},
+                            {"killerId": 2, "type": "BUILDING_KILL"},
+                            {"killerId": 2, "type": "CHAMPION_KILL"},
+                            {"type": "WARD_PLACED", "participantId": 1}
                         ],
                         "participantFrames": {
                             "1": {"totalGold": 500},
                             "2": {"totalGold": 300}
                         }
                     }
+                ],
+                "participants": [
+                    {
+                        "participantId": 1,
+                        "puuid": "test-puuid"
+                    },
+                    {
+                        "participantId": 2,
+                        "puuid": "other-puuid"
+                    }
                 ]
             }
         }
         mock_matchTimeline.return_value = response
 
-        data = get_matchTimeData(mock_puuid, mock_matchId)
+        data = get_playerMatchTimeline(mock_puuid, mock_matchId)
 
-        # Expected: Only events where participantId, killerId, or victimId == 1
+        # Expected: Only events with the conditions below:
+        # type = CHAMPION_KILL and involves killerId, assistingParticipantIds or victimId of the player
+        # type = ELITE_MONSTER_KILL (any) with DRAGON_SOUL_GIVEN (any)
+        # type = FEAT_UPDATE (any)
+        # type = BUILDING_KILL and involves killerId of the player
+        # type = TURRET_PLATE_DESTROYED and involves killerId of the player
         expected_data = {
             "frameData": [
                 {
                     "events": [
-                        {"participantId": 1, "type": "ITEM_PURCHASED"},
-                        {"killerId": 1, "type": "CHAMPION_KILL"}
+                        {"killerId": 2, "type": "CHAMPION_KILL", "assistingParticipantIds": [1]},
+                        {"killerId": 1, "type": "BUILDING_KILL"},
+                        {"killerId": 1, "type": "TURRET_PLATE_DESTROYED"},
+                        {"type": "ELITE_MONSTER_KILL", "killerId": 2, "assistingParticipantIds": [3], "killerTeamId": 100},
+                        {"type": "FEAT_UPDATE", "teamId": 100},
                     ],
                     "participantFrames": {"totalGold": 500}
                 }
@@ -84,17 +91,17 @@ class TestPlayerAnalysisTimeData:
         assert data == expected_data["frameData"]
     
 
-@pytest.mark.match_summary_player
+@pytest.mark.player_summary
 class TestPlayerAnalysisPerformance:
     """
     Test suite for the get_playerPerformance function.
     """
-    @patch("src.analysis.match_summary.get_matchTimeData")
-    @patch("src.analysis.match_summary.get_matchStats")
+    @patch("src.analysis.match_summary.get_playerMatchTimeline")
+    @patch("src.analysis.match_summary.get_playerMatchDetails")
     def test_get_playerPerformance(self, mock_matchStats, mock_matchTimeData):
 
-        stats_response = {"champion": "Ahri", "kills": 10}
-        timeData_response = {
+        matchDetails_response = {"champion": "Ahri", "kills": 10}
+        matchTimeline_response = {
                 "events": [
                     {"participantId": 1, "type": "CHAMPION_KILL"},
                     {"killerId": 1, "type": "CHAMPION_KILL"}
@@ -103,13 +110,13 @@ class TestPlayerAnalysisPerformance:
             }
             
         
-        mock_matchStats.return_value = stats_response
-        mock_matchTimeData.return_value = timeData_response
+        mock_matchStats.return_value = matchDetails_response
+        mock_matchTimeData.return_value = matchTimeline_response
 
         summary = get_playerSummary(mock_puuid, mock_matchId, mock_matchId)
 
         assert summary == {
-            "final_stats": stats_response,
-            "timeline_data": timeData_response
+            "player_stats": matchDetails_response,
+            "player_timeline": matchTimeline_response
         }
     

@@ -41,7 +41,7 @@ def fetch_recentMatches(puuid: str, count: int = 5):
     except Exception as error:
         raise HTTPException(status_code=500, detail="Internal Server Error: " + str(error))
 
-@app.get("/match-details/{match_id}")
+@app.get("/match-stats/{match_id}")
 def fetch_matchDetails(match_id: str):
     """
     Returns detailed information for a given match ID.

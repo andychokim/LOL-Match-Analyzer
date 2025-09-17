@@ -1,6 +1,9 @@
 from ..riot_api.riot_client import get_matchDetails, get_matchTimeline
 
-def get_matchStats(puuid, matchId):
+def get_playerMatchDetails(puuid, matchId):
+    """
+    Extracts player-specific stats from match details.
+    """
     match_details = get_matchDetails(matchId)
 
     # check if match_details is valid
@@ -25,9 +28,9 @@ def get_matchStats(puuid, matchId):
 
     return match_details["stats"]
 
-def get_matchTimeData(puuid, matchId):
+def get_playerMatchTimeline(puuid, matchId):
     """
-    Extracts player-specific timeline data from match timeline.
+    Extracts player-specific data from match timeline.
     
     return: a dictionary that has one key "frames" which contains a list of frames. 
         Each frame contains two keys: "events" and "inGameStats".
@@ -37,23 +40,47 @@ def get_matchTimeData(puuid, matchId):
 
     # check if match_events is valid
     if match_events and "info" in match_events:
-        players = match_events["metadata"]["participants"]
+        players = match_events["info"]["participants"]
         for player in players:
-            if player == puuid:
-                playerId = players.index(player) + 1
+
+            if player["puuid"] == puuid:
+                playerId = player["participantId"]
                 break
 
-        frames = match_events["info"].get("frames", [])
+        frames = match_events["info"]["frames"]
         for frame in frames:
 
-            # events related to this player at this frame
-            player_events = [
-                event for event in frame.get("events", [])
-                if any(value == playerId for key, value in event.items() if key.endswith("Id"))
-            ]
+            # refresh player events for each frame
+            player_events = []
+
+            events = frame["events"]
+            for event in events:
+
+                # filter events based on criteria:
+                # type = CHAMPION_KILL and involves killerId, assistingParticipantIds or victimId of the player
+                # type = ELITE_MONSTER_KILL (any) with DRAGON_SOUL_GIVEN (any)
+                # type = FEAT_UPDATE (any)
+                # type = BUILDING_KILL and involves killerId of the player
+                # type = TURRET_PLATE_DESTROYED and involves killerId of the player
+                if event["type"] == "CHAMPION_KILL":
+                    if ((event.get("killerId") == playerId) or
+                        (event.get("assistingParticipantIds") and playerId in event.get("assistingParticipantIds")) or
+                        (event.get("victimId") == playerId)):
+                        player_events.append(event)
+                elif event["type"] == "ELITE_MONSTER_KILL":
+                    player_events.append(event)
+                elif event["type"] == "FEAT_UPDATE":
+                    player_events.append(event)
+                elif event["type"] == "BUILDING_KILL":
+                    if event.get("killerId") == playerId:
+                        player_events.append(event)
+                elif event["type"] == "TURRET_PLATE_DESTROYED":
+                    if event.get("killerId") == playerId:
+                        player_events.append(event)
+
 
             # in-game stats for this player at this frame
-            player_data = frame.get("participantFrames", {}).get(str(playerId), {})
+            player_data = frame["participantFrames"][str(playerId)]
             
             # append to result
             player_timeData["frameData"].append({
@@ -64,8 +91,11 @@ def get_matchTimeData(puuid, matchId):
     return player_timeData["frameData"]
 
 def get_playerSummary(puuid, match_details, match_timeline):
+    """
+    Combines player-specific match details and timeline data.
+    """
 
     return {
-        "final_stats": get_matchStats(puuid, match_details),
-        "timeline_data": get_matchTimeData(puuid, match_timeline)
+        "player_stats": get_playerMatchDetails(puuid, match_details),
+        "player_timeline": get_playerMatchTimeline(puuid, match_timeline)
     }
