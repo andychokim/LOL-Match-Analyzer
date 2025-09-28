@@ -113,7 +113,7 @@ class TestPlayerAnalysisPerformance:
         mock_matchStats.return_value = matchDetails_response
         mock_matchTimeData.return_value = matchTimeline_response
 
-        summary = get_playerSummary(mock_puuid, mock_matchId, mock_matchId)
+        summary = get_playerSummary(mock_puuid, mock_matchId)
 
         assert summary == {
             "player_stats": matchDetails_response,

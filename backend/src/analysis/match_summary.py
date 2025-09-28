@@ -1,10 +1,10 @@
 from ..riot_api.riot_client import get_matchDetails, get_matchTimeline
 
-def get_playerMatchDetails(puuid, matchId):
+def get_playerMatchDetails(puuid, match_id):
     """
     Extracts player-specific stats from match details.
     """
-    match_details = get_matchDetails(matchId)
+    match_details = get_matchDetails(match_id)
 
     # check if match_details is valid
     if match_details and "info" in match_details:
@@ -22,20 +22,20 @@ def get_playerMatchDetails(puuid, matchId):
                     "vision": player.get("visionScore"),
                     "cs": player.get("totalMinionsKilled") + player.get("neutralMinionsKilled"),
                     # raw copy if needed
-                    "_raw": player
+                    # "_raw": player
                 }}
                 break
 
     return match_details["stats"]
 
-def get_playerMatchTimeline(puuid, matchId):
+def get_playerMatchTimeline(puuid, match_id):
     """
     Extracts player-specific data from match timeline.
     
     return: a dictionary that has one key "frames" which contains a list of frames. 
         Each frame contains two keys: "events" and "inGameStats".
     """
-    match_events = get_matchTimeline(matchId)
+    match_events = get_matchTimeline(match_id)
     player_timeData = {"frameData": []}
 
     # check if match_events is valid
@@ -90,12 +90,12 @@ def get_playerMatchTimeline(puuid, matchId):
 
     return player_timeData["frameData"]
 
-def get_playerSummary(puuid, match_details, match_timeline):
+def get_playerSummary(puuid, match_id):
     """
     Combines player-specific match details and timeline data.
     """
 
     return {
-        "player_stats": get_playerMatchDetails(puuid, match_details),
-        "player_timeline": get_playerMatchTimeline(puuid, match_timeline)
+        "player_stats": get_playerMatchDetails(puuid, match_id),
+        "player_timeline": get_playerMatchTimeline(puuid, match_id)
     }

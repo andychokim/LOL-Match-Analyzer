@@ -6,6 +6,7 @@ It initializes the server, sets up routes, and starts listening for requests.
 from fastapi import FastAPI, HTTPException
 from src.riot_api import riot_client
 from src.riot_api.riot_client import RiotAPIError
+from src.analysis import match_summary
 
 app = FastAPI(title="LOL Match Analyzer")
 
@@ -41,10 +42,10 @@ def fetch_recentMatches(puuid: str, count: int = 5):
     except Exception as error:
         raise HTTPException(status_code=500, detail="Internal Server Error: " + str(error))
 
-@app.get("/match-stats/{match_id}")
-def fetch_matchDetails(match_id: str):
+@app.get("/match-details/{match_id}")
+def fetch_matchFullDetails(match_id: str):
     """
-    Returns detailed information for a given match ID.
+    Returns a full match details for a given match ID.
     """
     try:
         details = riot_client.get_matchDetails(match_id)
@@ -55,13 +56,26 @@ def fetch_matchDetails(match_id: str):
         raise HTTPException(status_code=500, detail="Internal Server Error: " + str(error))
     
 @app.get("/match-timeline/{match_id}")
-def fetch_matchEvents(match_id: str):
+def fetch_matchFullEvents(match_id: str):
     """
-    Returns detailed timeline for a given match ID.
+    Returns a full match timeline for a given match ID.
     """
     try:
         details = riot_client.get_matchTimeline(match_id)
         return {"match_timeline": details}
+    except RiotAPIError as error:
+        raise HTTPException(status_code=404, detail=str(error))
+    except Exception as error:
+        raise HTTPException(status_code=500, detail="Internal Server Error: " + str(error))
+    
+@app.get("/player-summary/{puuid}/{match_id}")
+def fetch_matchSummary(puuid: str, match_id: str):
+    """
+    Returns a summary of player-specific stats and timeline for a given match ID and PUUID.
+    """
+    try:
+        summary = match_summary.get_playerSummary(puuid, match_id)
+        return {"player_summary": summary}
     except RiotAPIError as error:
         raise HTTPException(status_code=404, detail=str(error))
     except Exception as error:
