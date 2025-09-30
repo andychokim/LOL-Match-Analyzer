@@ -1,5 +1,5 @@
 """
-Configuration file for the Riot API client.
+Configuration file for the API clients.
 """
 
 import os
@@ -7,9 +7,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-API_KEY = os.getenv("RIOT_API_KEY")
+RIOT_API_KEY = os.getenv("RIOT_API_KEY")
 REGION = os.getenv("REGION")
 PLATFORM_REGION = os.getenv("PLATFORM_REGION")
 HEADERS = {
-    "X-Riot-Token": API_KEY
+    "X-Riot-Token": RIOT_API_KEY
 }
+
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")

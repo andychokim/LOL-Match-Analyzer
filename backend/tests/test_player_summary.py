@@ -3,32 +3,91 @@
 import pytest
 from unittest.mock import patch, Mock, ANY
 
-from src.analysis.match_summary import get_playerMatchDetails, get_playerMatchTimeline, get_playerSummary
+from src.analysis.player_summary import get_playerDetails, get_playerTimeline, get_playerSummary
 
 mock_puuid = "test-puuid"
 mock_matchId = "test-match-id"
 
-@pytest.mark.match_summary_stats
+@pytest.mark.player_details
 class TestPlayerAnalysisStats:
     """
     Test suite for the get_matchStats function.
     """
-    @patch("src.analysis.match_summary.get_matchDetails")
-    def test_get_matchStats(self, mock_matchDetails):
-        response = {"stats": "test-stats"}
+    @patch("src.analysis.player_summary.get_matchDetails")
+    def test_get_playerDetails(self, mock_matchDetails):
+        response = {
+            "info": {
+                "participants": [
+                    {
+                        "puuid": "test-puuid",
+                        "championName": "Ahri",
+                        "teamPosition": "MID",
+                        "champLevel": 15,
+                        "kills": 10,
+                        "deaths": 2,
+                        "assists": 5,
+                        "goldEarned": 12000,
+                        "totalDamageDealtToChampions": 25000,
+                        "visionScore": 30,
+                        "wardsPlaced": 10,
+                        "detectorWardsPlaced": 2,
+                        "totalMinionsKilled": 200,
+                        "neutralMinionsKilled": 30,
+                        "perks": {"statPerks": {}, "styles": []},
+                        "challenges": {"challenge1": 100, "challenge2": 200}
+                    },
+                    # should not be included
+                    {
+                        "puuid": "other-puuid",
+                        "championName": "Yasuo",
+                        "teamPosition": "MID",
+                        "champLevel": 15,
+                        "kills": 10,
+                        "deaths": 2,
+                        "assists": 5,
+                        "goldEarned": 12000,
+                        "totalDamageDealtToChampions": 25000,
+                        "visionScore": 30,
+                        "wardsPlaced": 10,
+                        "detectorWardsPlaced": 2,
+                        "totalMinionsKilled": 200,
+                        "neutralMinionsKilled": 30,
+                        "perks": {"statPerks": {}, "styles": []},
+                        "challenges": {"challenge1": 100, "challenge2": 200}
+                    },
+                ]
+            }
+        }
         mock_matchDetails.return_value = response
 
-        stats = get_playerMatchDetails(mock_puuid, mock_matchId)
+        expected_stats = {
+            "champion": "Ahri",
+            "role": "MID",
+            "champLevel": 15,
+            "kills": 10,
+            "deaths": 2,
+            "assists": 5,
+            "totalGold": 12000,
+            "totalDamage": 25000,
+            "visionScore": 30,
+            "wardsPlaced": 10,
+            "detectorWardsPlaced": 2,
+            "cs": 230,  # 200 + 30
+            "runes": {"statPerks": {}, "styles": []},
+            "challenge": {"challenge1": 100, "challenge2": 200}
+        }
 
-        assert stats == response["stats"]
+        stats = get_playerDetails(mock_puuid, mock_matchId)
 
-@pytest.mark.match_summary_timeData
+        assert stats == expected_stats
+
+@pytest.mark.player_timeline
 class TestPlayerAnalysisTimeData:
     """
     Test suite for the get_matchTimeData function.
     """
-    @patch("src.analysis.match_summary.get_matchTimeline")
-    def test_get_matchTimeData(self, mock_matchTimeline):
+    @patch("src.analysis.player_summary.get_matchTimeline")
+    def test_get_matchTimeline(self, mock_matchTimeline):
         response = {
             "info": {
                 "frames": [
@@ -66,7 +125,7 @@ class TestPlayerAnalysisTimeData:
         }
         mock_matchTimeline.return_value = response
 
-        data = get_playerMatchTimeline(mock_puuid, mock_matchId)
+        data = get_playerTimeline(mock_puuid, mock_matchId)
 
         # Expected: Only events with the conditions below:
         # type = CHAMPION_KILL and involves killerId, assistingParticipantIds or victimId of the player
@@ -96,8 +155,8 @@ class TestPlayerAnalysisPerformance:
     """
     Test suite for the get_playerPerformance function.
     """
-    @patch("src.analysis.match_summary.get_playerMatchTimeline")
-    @patch("src.analysis.match_summary.get_playerMatchDetails")
+    @patch("src.analysis.player_summary.get_playerTimeline")
+    @patch("src.analysis.player_summary.get_playerDetails")
     def test_get_playerPerformance(self, mock_matchStats, mock_matchTimeData):
 
         matchDetails_response = {"champion": "Ahri", "kills": 10}

@@ -6,7 +6,7 @@ It initializes the server, sets up routes, and starts listening for requests.
 from fastapi import FastAPI, HTTPException
 from src.riot_api import riot_client
 from src.riot_api.riot_client import RiotAPIError
-from src.analysis import match_summary
+from src.analysis import player_summary
 
 app = FastAPI(title="LOL Match Analyzer")
 
@@ -69,12 +69,12 @@ def fetch_matchFullEvents(match_id: str):
         raise HTTPException(status_code=500, detail="Internal Server Error: " + str(error))
     
 @app.get("/player-summary/{puuid}/{match_id}")
-def fetch_matchSummary(puuid: str, match_id: str):
+def fetch_playerSummary(puuid: str, match_id: str):
     """
     Returns a summary of player-specific stats and timeline for a given match ID and PUUID.
     """
     try:
-        summary = match_summary.get_playerSummary(puuid, match_id)
+        summary = player_summary.get_playerSummary(puuid, match_id)
         return {"player_summary": summary}
     except RiotAPIError as error:
         raise HTTPException(status_code=404, detail=str(error))

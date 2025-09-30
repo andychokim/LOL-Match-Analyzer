@@ -7,6 +7,7 @@ from fastapi.testclient import TestClient
 from src.riot_api.riot_client import RiotAPIError
 from src.server import app
 
+
 client = TestClient(app)
 
 @pytest.mark.server_puuid
@@ -163,7 +164,7 @@ class TestServerSummary:
     This includes tests for fetching player summary.
     """
 
-    @patch("src.analysis.match_summary.get_playerSummary")
+    @patch("src.analysis.player_summary.get_playerSummary")
     def test_fetch_player_summary_success(self, mock_get_playerSummary):
         mock_summary = {
             "player_stats": {"champion": "Ahri", "kills": 10, "deaths": 2, "assists": 5},
@@ -178,7 +179,7 @@ class TestServerSummary:
         assert response.json() == {"player_summary": mock_summary}
         mock_get_playerSummary.assert_called_once_with("test-puuid-123", "test-match-id")
 
-    @patch("src.analysis.match_summary.get_playerSummary")
+    @patch("src.analysis.player_summary.get_playerSummary")
     def test_fetch_player_summary_failure_500(self, mock_get_playerSummary):
         mock_get_playerSummary.side_effect = Exception("Player summary fetch error - unexpected")
 
