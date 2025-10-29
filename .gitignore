@@ -7,7 +7,7 @@ dist/
 build/
 
 # Virtual environments
-venv/
+node_modules/
 .env
 
 # Logs
