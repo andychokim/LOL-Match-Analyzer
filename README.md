@@ -1,2 +1,2 @@
-# LOL-Replay-Analyzer
-Personal project for automatic League of Legends game analyzer
+# LOL-Match-Analyzer
+Personal project for automatic League of Legends match analyzer
