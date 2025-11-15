@@ -6,8 +6,6 @@ const router = express.Router();
 /**
  * routes
  */
-// GET hero page
-router.get('/', riotController.getHeroPageHandler);
 
 // GET a PUUID by summoner name and tag
 router.get('/summoner/:summonerName/:tagLine', riotController.getPUUIDHandler);

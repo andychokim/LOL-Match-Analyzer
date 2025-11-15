@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
+import heroRoutes from './routes/heroRoutes';
 import riotRoutes from './routes/riotRoutes';
 
 // express app
@@ -13,6 +14,9 @@ app.use((req: Request, res: Response, next) => {
     console.log(req.path, req.method);
     next();
 });
+
+// heroRoutes
+app.use('/', heroRoutes);
 
 // riotRoutes
 app.use('/api/riot', riotRoutes);
