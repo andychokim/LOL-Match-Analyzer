@@ -5,6 +5,15 @@ import { getPlayerSummary } from '../services/playerSummaryService';
 /**
  * routes
  */
+// Get hero page
+export async function getHeroPageHandler(req: Request, res: Response, next: NextFunction) {
+    try {
+        res.json('Welcome to the LOL Match Analyzer API Hero Page!');
+    }
+    catch (error: any) {
+        res.status(500).json({ error: 'Failed to load hero page' });
+    }
+};
 
 // Get a PUUID by summoner name and tag
 export async function getPUUIDHandler(req: Request, res: Response, next: NextFunction) {
@@ -32,34 +41,6 @@ export async function getRecentMatchesHandler(req: Request, res: Response, next:
     }
     catch (error: any) {
         res.status(500).json({ error: 'Failed to fetch recent matches' });
-    }
-};
-
-// Get a match details by match ID
-export async function getMatchDetailsHandler(req: Request, res: Response, next: NextFunction) {
-    try {
-        const { matchID } = req.params;
-        console.log(`Fetching match details for Match ID: ${matchID}`);
-
-        const data = await riotService.getMatchDetailsByMatchID(matchID);
-        res.json(data);
-    }
-    catch (error: any) {
-        res.status(500).json({ error: 'Failed to fetch match details' });
-    }
-};
-
-// Get a match timeline by match ID
-export async function getMatchTimelineHandler(req: Request, res: Response, next: NextFunction) {
-    try {
-        const { matchID } = req.params;
-        console.log(`Fetching match timeline for Match ID: ${matchID}`);
-
-        const data = await riotService.getMatchTimelineByMatchID(matchID);
-        res.json(data);
-    }
-    catch (error: any) {
-        res.status(500).json({ error: 'Failed to fetch match timeline' });
     }
 };
 
