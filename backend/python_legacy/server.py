@@ -4,8 +4,8 @@ It initializes the server, sets up routes, and starts listening for requests.
 """
 
 from fastapi import FastAPI, HTTPException
-from src.riot_api import riot_client
-from src.riot_api.riot_client import RiotAPIError
+from backend.python_legacy import riot_client
+from backend.python_legacy.riot_client import RiotAPIError
 from src.analysis import player_summary
 
 app = FastAPI(title="LOL Match Analyzer")

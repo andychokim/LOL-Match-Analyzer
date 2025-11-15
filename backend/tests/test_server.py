@@ -4,8 +4,8 @@ import pytest
 from unittest.mock import patch
 from fastapi.testclient import TestClient
 
-from src.riot_api.riot_client import RiotAPIError
-from src.server import app
+from backend.python_legacy.riot_client import RiotAPIError
+from backend.python_legacy.server import app
 
 
 client = TestClient(app)

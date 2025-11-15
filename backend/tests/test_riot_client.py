@@ -4,7 +4,7 @@ import pytest
 from unittest.mock import patch, Mock, ANY
 from requests.exceptions import HTTPError
 
-from src.riot_api.riot_client import get_PUUID, get_recentMatches, get_matchDetails, get_matchTimeline, RiotAPIError
+from backend.python_legacy.riot_client import get_PUUID, get_recentMatches, get_matchDetails, get_matchTimeline, RiotAPIError
 
 @pytest.mark.riot_client_puuid
 class TestGetPUUID:

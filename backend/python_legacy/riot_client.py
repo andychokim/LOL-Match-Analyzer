@@ -10,7 +10,7 @@ Version: 1.1
 import logging
 from typing import Any
 import requests
-from src.utils.config import REGION, HEADERS
+from backend.python_legacy.config import REGION, HEADERS
 
 # Configure logging
 logging.basicConfig(level = logging.INFO)

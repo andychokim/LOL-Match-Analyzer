@@ -1,6 +1,6 @@
 from openai import OpenAI
 
-from src.utils.config import OPENAI_API_KEY
+from backend.python_legacy.config import OPENAI_API_KEY
 
 client = OpenAI(api_key=OPENAI_API_KEY)
 
