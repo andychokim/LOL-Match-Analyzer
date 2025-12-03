@@ -26,5 +26,8 @@ backend/dist/
 .DS_Store
 Thumbs.db
 
+# eslint cache
+.eslintcache
+
 # etc
 temp.txt

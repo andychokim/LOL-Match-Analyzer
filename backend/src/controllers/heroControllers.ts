@@ -1,4 +1,4 @@
-import {Request, Response, NextFunction} from 'express';
+import { Request, Response, NextFunction } from 'express';
 
 // Get hero page
 export async function getHeroPageHandler(req: Request, res: Response, next: NextFunction) {

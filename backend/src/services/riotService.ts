@@ -7,7 +7,7 @@
  * Version: 1.1
  */
 
-import { HEADERS, REGION } from "../config";
+import { HEADERS, REGION } from '../config';
 
 /**
  * Custom error class for Riot API errors.
@@ -38,7 +38,7 @@ async function send_request(url: string): Promise<any> {
             throw new RiotAPIError(
                 `API request failed: ${response.status} - ${responseText}`,
                 response.status,
-                responseText
+                responseText,
             );
         }
 

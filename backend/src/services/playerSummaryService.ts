@@ -1,4 +1,4 @@
-import { getMatchDetailsByMatchID, getMatchTimelineByMatchID } from "./riotService";
+import { getMatchDetailsByMatchID, getMatchTimelineByMatchID } from './riotService';
 
 interface PlayerDetails {
     champion: string;
@@ -35,43 +35,43 @@ interface PlayerSummary {
 
 const CHALLENGES_KEEP_KEYS = new Set([
     // Core performance
-    "kda",
-    "damagePerMinute",
-    "teamDamagePercentage",
-    "killParticipation",
-    "goldPerMinute",
-    "visionScorePerMinute",
+    'kda',
+    'damagePerMinute',
+    'teamDamagePercentage',
+    'killParticipation',
+    'goldPerMinute',
+    'visionScorePerMinute',
 
     // Objective & Macro
-    "baronTakedowns",
-    "dragonTakedowns",
-    "riftHeraldTakedowns",
-    "turretTakedowns",
-    "voidMonsterKill",
+    'baronTakedowns',
+    'dragonTakedowns',
+    'riftHeraldTakedowns',
+    'turretTakedowns',
+    'voidMonsterKill',
 
     // Fighting / Skirmishing
-    "soloKills",
-    "killsNearEnemyTurret",
-    "killsUnderOwnTurret",
-    "outnumberedKills",
-    "immobilizeAndKillWithAlly",
-    "enemyChampionImmobilizations",
+    'soloKills',
+    'killsNearEnemyTurret',
+    'killsUnderOwnTurret',
+    'outnumberedKills',
+    'immobilizeAndKillWithAlly',
+    'enemyChampionImmobilizations',
 
     // Laning Phase
-    "laneMinionsFirst10Minutes",
-    "maxCsAdvantageOnLaneOpponent",
-    "maxLevelLeadLaneOpponent",
+    'laneMinionsFirst10Minutes',
+    'maxCsAdvantageOnLaneOpponent',
+    'maxLevelLeadLaneOpponent',
 
     // Survivability
-    "damageTakenOnTeamPercentage",
-    "survivedSingleDigitHpCount",
-    "survivedThreeImmobilizesInFight",
+    'damageTakenOnTeamPercentage',
+    'survivedSingleDigitHpCount',
+    'survivedThreeImmobilizesInFight',
 
     // Vision & Utility
-    "controlWardsPlaced",
-    "stealthWardsPlaced",
-    "wardTakedowns",
-    "visionScoreAdvantageLaneOpponent",
+    'controlWardsPlaced',
+    'stealthWardsPlaced',
+    'wardTakedowns',
+    'visionScoreAdvantageLaneOpponent',
 ]);
 
 /**
@@ -158,7 +158,7 @@ async function getPlayerTimeline(puuid: string, match_id: string): Promise<Frame
                 delete event.timestamp; // remove timestamp to reduce size
 
                 // Filter events based on criteria
-                if (event.type === "CHAMPION_KILL") {
+                if (event.type === 'CHAMPION_KILL') {
                     if (
                         event.killerId === playerId ||
                         (event.assistingParticipantIds && event.assistingParticipantIds.includes(playerId)) ||
@@ -169,9 +169,9 @@ async function getPlayerTimeline(puuid: string, match_id: string): Promise<Frame
                         delete event.victimDamageReceived;
                         player_events.push(event);
                     }
-                } else if (event.type === "ELITE_MONSTER_KILL" || event.type === "FEAT_UPDATE") {
+                } else if (event.type === 'ELITE_MONSTER_KILL' || event.type === 'FEAT_UPDATE') {
                     player_events.push(event);
-                } else if (event.type === "BUILDING_KILL" || event.type === "TURRET_PLATE_DESTROYED") {
+                } else if (event.type === 'BUILDING_KILL' || event.type === 'TURRET_PLATE_DESTROYED') {
                     if (event.killerId === playerId) {
                         player_events.push(event);
                     }

@@ -1,12 +1,10 @@
-import {Request, Response, NextFunction} from 'express';
+import { Request, Response, NextFunction } from 'express';
 import * as riotService from '../services/riotService';
 import { getPlayerSummary } from '../services/playerSummaryService';
 
 /**
  * routes
  */
-
-
 // Get a PUUID by summoner name and tag
 export async function getPUUIDHandler(req: Request, res: Response, next: NextFunction) {
     try {
@@ -18,7 +16,28 @@ export async function getPUUIDHandler(req: Request, res: Response, next: NextFun
     }
     catch (error: any) {
         console.error(error);
-        res.status(500).json({ error: 'Failed to fetch PUUID' });
+        const apiResponse = error.response;
+
+        if (apiResponse) {
+            if (apiResponse.status === 400) {
+                res.status(400).json({ error: 'Bad Request' });
+            }
+            else if (apiResponse.status === 401) {
+                res.status(401).json({ error: 'Unauthorized: Invalid API key' });
+            }
+            else if (apiResponse.status === 403) {
+                res.status(403).json({ error: 'Forbidden: Access denied' });
+            }
+            else if (apiResponse.status === 404) {
+                res.status(404).json({ error: 'Summoner not found' });
+            }
+            else if (apiResponse.status === 429) {
+                res.status(429).json({ error: 'Rate limit exceeded' });
+            }
+        }
+        else {
+            res.status(500).json({ error: 'Failed to fetch PUUID' });
+        }
     }
 };
 
@@ -32,7 +51,29 @@ export async function getRecentMatchesHandler(req: Request, res: Response, next:
         res.json(matches);
     }
     catch (error: any) {
-        res.status(500).json({ error: 'Failed to fetch recent matches' });
+        console.error(error);
+        const apiResponse = error.response;
+        
+        if (apiResponse) {
+            if (apiResponse.status === 400) {
+                res.status(400).json({ error: 'Bad Request' });
+            }
+            else if (apiResponse.status === 401) {
+                res.status(401).json({ error: 'Unauthorized: Invalid API key' });
+            }
+            else if (apiResponse.status === 403) {
+                res.status(403).json({ error: 'Forbidden: Access denied' });
+            }
+            else if (apiResponse.status === 404) {
+                res.status(404).json({ error: 'Data not found' });
+            }
+            else if (apiResponse.status === 429) {
+                res.status(429).json({ error: 'Rate limit exceeded' });
+            }
+        }
+        else {
+            res.status(500).json({ error: 'Failed to fetch PUUID' });
+        }
     }
 };
 
@@ -46,6 +87,28 @@ export async function getPlayerSummaryHandler(req: Request, res: Response, next:
         res.json(data);
     }
     catch (error: any) {
-        res.status(500).json({ error: 'Failed to fetch player summary' });
+        console.error(error);
+        const apiResponse = error.response;
+        
+        if (apiResponse) {
+            if (apiResponse.status === 400) {
+                res.status(400).json({ error: 'Bad Request' });
+            }
+            else if (apiResponse.status === 401) {
+                res.status(401).json({ error: 'Unauthorized: Invalid API key' });
+            }
+            else if (apiResponse.status === 403) {
+                res.status(403).json({ error: 'Forbidden: Access denied' });
+            }
+            else if (apiResponse.status === 404) {
+                res.status(404).json({ error: 'Data not found' });
+            }
+            else if (apiResponse.status === 429) {
+                res.status(429).json({ error: 'Rate limit exceeded' });
+            }
+        }
+        else {
+            res.status(500).json({ error: 'Failed to fetch PUUID' });
+        }
     }
 };
