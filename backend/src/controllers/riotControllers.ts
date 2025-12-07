@@ -15,28 +15,27 @@ export async function getPUUIDHandler(req: Request, res: Response, next: NextFun
         res.json(puuid);
     }
     catch (error: any) {
-        console.error(error);
-        const apiResponse = error.response;
+        const statusCode = error.statusCode;
 
-        if (apiResponse) {
-            if (apiResponse.status === 400) {
+        if (statusCode) {
+            if (statusCode === 400) {
                 res.status(400).json({ error: 'Bad Request' });
             }
-            else if (apiResponse.status === 401) {
+            else if (statusCode === 401) {
                 res.status(401).json({ error: 'Unauthorized: Invalid API key' });
             }
-            else if (apiResponse.status === 403) {
+            else if (statusCode === 403) {
                 res.status(403).json({ error: 'Forbidden: Access denied' });
             }
-            else if (apiResponse.status === 404) {
+            else if (statusCode === 404) {
                 res.status(404).json({ error: 'Summoner not found' });
             }
-            else if (apiResponse.status === 429) {
+            else if (statusCode === 429) {
                 res.status(429).json({ error: 'Rate limit exceeded' });
             }
         }
         else {
-            res.status(500).json({ error: 'Failed to fetch PUUID' });
+            res.status(500).json({ error: 'Internal Server Error' });
         }
     }
 };
@@ -51,28 +50,27 @@ export async function getRecentMatchesHandler(req: Request, res: Response, next:
         res.json(matches);
     }
     catch (error: any) {
-        console.error(error);
-        const apiResponse = error.response;
-        
-        if (apiResponse) {
-            if (apiResponse.status === 400) {
+        const statusCode = error.statusCode;
+
+        if (statusCode) {
+            if (statusCode === 400) {
                 res.status(400).json({ error: 'Bad Request' });
             }
-            else if (apiResponse.status === 401) {
+            else if (statusCode === 401) {
                 res.status(401).json({ error: 'Unauthorized: Invalid API key' });
             }
-            else if (apiResponse.status === 403) {
+            else if (statusCode === 403) {
                 res.status(403).json({ error: 'Forbidden: Access denied' });
             }
-            else if (apiResponse.status === 404) {
+            else if (statusCode === 404) {
                 res.status(404).json({ error: 'Data not found' });
             }
-            else if (apiResponse.status === 429) {
+            else if (statusCode === 429) {
                 res.status(429).json({ error: 'Rate limit exceeded' });
             }
         }
         else {
-            res.status(500).json({ error: 'Failed to fetch PUUID' });
+            res.status(500).json({ error: 'Internal Server Error' });
         }
     }
 };
@@ -87,28 +85,27 @@ export async function getPlayerSummaryHandler(req: Request, res: Response, next:
         res.json(data);
     }
     catch (error: any) {
-        console.error(error);
-        const apiResponse = error.response;
-        
-        if (apiResponse) {
-            if (apiResponse.status === 400) {
+        const statusCode = error.statusCode;
+
+        if (statusCode) {
+            if (statusCode === 400) {
                 res.status(400).json({ error: 'Bad Request' });
             }
-            else if (apiResponse.status === 401) {
+            else if (statusCode === 401) {
                 res.status(401).json({ error: 'Unauthorized: Invalid API key' });
             }
-            else if (apiResponse.status === 403) {
+            else if (statusCode === 403) {
                 res.status(403).json({ error: 'Forbidden: Access denied' });
             }
-            else if (apiResponse.status === 404) {
+            else if (statusCode === 404) {
                 res.status(404).json({ error: 'Data not found' });
             }
-            else if (apiResponse.status === 429) {
+            else if (statusCode === 429) {
                 res.status(429).json({ error: 'Rate limit exceeded' });
             }
         }
         else {
-            res.status(500).json({ error: 'Failed to fetch PUUID' });
+            res.status(500).json({ error: 'Internal Server Error' });
         }
     }
 };

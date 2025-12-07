@@ -4,7 +4,7 @@
  * It uses the fetch API to make HTTP requests and requires an API key and region configuration.
  * Author: Andrew C. Kim
  * Date: 2025-08-15
- * Version: 1.1
+ * Version: 1.0.0
  */
 
 import { HEADERS, REGION } from '../config';
@@ -12,15 +12,15 @@ import { HEADERS, REGION } from '../config';
 /**
  * Custom error class for Riot API errors.
  */
-class RiotAPIError extends Error {
-    status_code?: number;
-    response_text?: string;
+export class RiotAPIError extends Error {
+    statusCode?: number;
+    responseBody?: string;
 
-    constructor(message: string, status_code?: number, response_text?: string) {
+    constructor(message: string, statusCode?: number, responseBody?: string) {
         super(message);
         this.name = 'RiotAPIError';
-        this.status_code = status_code;
-        this.response_text = response_text;
+        this.statusCode = statusCode;
+        this.responseBody = responseBody;
     }
 }
 
@@ -29,28 +29,29 @@ class RiotAPIError extends Error {
  * @param url 
  * @returns a JSON response
  */
-async function send_request(url: string): Promise<any> {
+async function sendRequest(url: string): Promise<any> {
     try {
         const response = await fetch(url, { headers: HEADERS as any });
 
+        // throw the error so the catch block will handle it
         if (!response.ok) {
             const responseText = await response.text();
             throw new RiotAPIError(
                 `API request failed: ${response.status} - ${responseText}`,
                 response.status,
-                responseText,
+                responseText
             );
         }
 
         return await response.json();
     } catch (error) {
         if (error instanceof RiotAPIError) {
-            console.error(`API request with HTTP status code ${error.status_code}`);
+            console.error(error);
             throw error;
         }
 
         console.error(`Network error occurred while accessing ${url}: ${error}`);
-        throw new RiotAPIError(`Network error occurred: ${String(error)}`);
+        throw new RiotAPIError(`Network error occurred: ${String(error)}`, 0, String(error));
     }
 }
 
@@ -65,8 +66,7 @@ export async function getPUUIDBySummonerNameAndTag(gameName: string, tagLine: st
     const url = `https://${REGION}.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${gameName}/${tagLine}`;
     console.log(`Fetching PUUID for ${gameName}#${tagLine} from ${url}`);
 
-    const response = await send_request(url);
-    return response.puuid;
+    return await sendRequest(url);
 }
 
 /**
@@ -80,7 +80,7 @@ export async function getRecentMatchesByPUUID(puuid: string, count: number = 5):
     const url = `https://${REGION}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?count=${count}`;
     console.log(`Fetching recent matches for PUUID ${puuid} from ${url}`);
 
-    return await send_request(url);
+    return await sendRequest(url);
 }
 
 /**
@@ -93,7 +93,7 @@ export async function getMatchDetailsByMatchID(match_id: string): Promise<Record
     const url = `https://${REGION}.api.riotgames.com/lol/match/v5/matches/${match_id}`;
     console.log(`Fetching match details for match ID ${match_id} from ${url}`);
 
-    return await send_request(url);
+    return await sendRequest(url);
 }
 
 /**
@@ -106,7 +106,5 @@ export async function getMatchTimelineByMatchID(match_id: string): Promise<Recor
     const url = `https://${REGION}.api.riotgames.com/lol/match/v5/matches/${match_id}/timeline`;
     console.log(`Fetching match timeline for match ID ${match_id} from ${url}`);
 
-    return await send_request(url);
+    return await sendRequest(url);
 }
-
-export { RiotAPIError };

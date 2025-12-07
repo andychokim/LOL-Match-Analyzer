@@ -8,7 +8,7 @@
     },
     "scripts": {
         "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-        "test": "echo \"Error: no test specified\" && exit 1",
+        "test": "npx jest",
         "dev": "npx tsx --env-file=.env --watch src/server.ts",
         "build": "tsc",
         "start": "node dist/server.js"
@@ -20,7 +20,10 @@
         "@eslint/js": "^9.38.0",
         "@types/cors": "^2.8.19",
         "@types/express": "^5.0.5",
+        "@types/jest": "^30.0.0",
         "@types/node": "^24.9.2",
+        "jest": "^30.2.0",
+        "ts-jest": "^29.4.6",
         "ts-node": "^10.9.2",
         "typescript": "^5.9.3",
         "typescript-eslint": "^8.48.1"
