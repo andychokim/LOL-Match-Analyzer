@@ -24,10 +24,6 @@ interface FrameData {
     participantFrames: any;
 }
 
-interface PlayerTimeline {
-    frameData: FrameData[];
-}
-
 interface PlayerSummary {
     player_stats: PlayerDetails;
     player_timeline: FrameData[];

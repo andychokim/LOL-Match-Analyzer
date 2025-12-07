@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import * as riotService from '../services/riotService';
 import { getPlayerSummary } from '../services/playerSummaryService';
 
@@ -6,7 +6,7 @@ import { getPlayerSummary } from '../services/playerSummaryService';
  * routes
  */
 // Get a PUUID by summoner name and tag
-export async function getPUUIDHandler(req: Request, res: Response, next: NextFunction) {
+export async function getPUUIDHandler(req: Request, res: Response) {
     try {
         const { summonerName, tagLine } = req.params;
         console.log(`Fetching PUUID for ${summonerName}#${tagLine}`);
@@ -41,7 +41,7 @@ export async function getPUUIDHandler(req: Request, res: Response, next: NextFun
 };
 
 // Get recent matches by PUUID
-export async function getRecentMatchesHandler(req: Request, res: Response, next: NextFunction) {
+export async function getRecentMatchesHandler(req: Request, res: Response) {
     try {
         const { puuid } = req.params;
         console.log(`Fetching recent matches for PUUID: ${puuid}`);
@@ -76,7 +76,7 @@ export async function getRecentMatchesHandler(req: Request, res: Response, next:
 };
 
 // Get a player summary by PUUID and match ID
-export async function getPlayerSummaryHandler(req: Request, res: Response, next: NextFunction) {
+export async function getPlayerSummaryHandler(req: Request, res: Response) {
     try {
         const { puuid, matchID } = req.params;
         console.log(`Fetching player summary for PUUID: ${puuid} in Match ID: ${matchID}`);

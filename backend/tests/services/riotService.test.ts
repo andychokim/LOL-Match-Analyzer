@@ -4,9 +4,6 @@ import {
     getMatchTimelineByMatchID,
     getPUUIDBySummonerNameAndTag,
     getRecentMatchesByPUUID,
-    // getRecentMatchesByPUUID,
-    // getMatchDetailsByMatchID,
-    // getMatchTimelineByMatchID
 } from '../../src/services/riotService';
 
 
@@ -48,7 +45,6 @@ describe('Riot Service', () => {
             const response = await getPUUIDBySummonerNameAndTag(mocks.name, mocks.tag);
 
             expect(response).toBe(mocks.puuid);
-            expect(global.fetch).toHaveBeenCalled();
             expect(global.fetch).toHaveBeenCalledTimes(1);
             
             // Check that fetch was called with a URL containing the summoner name and tag
@@ -63,7 +59,6 @@ describe('Riot Service', () => {
             (global.fetch as jest.Mock).mockRejectedValue(mockRiotAPIError);
 
             await expect(getPUUIDBySummonerNameAndTag(mocks.name, mocks.tag)).rejects.toThrow(mockRiotAPIError);
-            expect(global.fetch).toHaveBeenCalled();
             expect(global.fetch).toHaveBeenCalledTimes(1);
         });
     });
@@ -79,7 +74,6 @@ describe('Riot Service', () => {
             const response = await getRecentMatchesByPUUID(mocks.puuid);
 
             expect(response).toEqual(['match1', 'match2', 'match3']);
-            expect(global.fetch).toHaveBeenCalled();
             expect(global.fetch).toHaveBeenCalledTimes(1);
             expect(global.fetch).toHaveBeenCalledWith(
                 expect.stringContaining(mocks.puuid),
@@ -92,7 +86,6 @@ describe('Riot Service', () => {
             (global.fetch as jest.Mock).mockRejectedValue(mockRiotAPIError);
 
             await expect(getPUUIDBySummonerNameAndTag(mocks.name, mocks.tag)).rejects.toThrow(mockRiotAPIError);
-            expect(global.fetch).toHaveBeenCalled();
             expect(global.fetch).toHaveBeenCalledTimes(1);
         });
     });
@@ -122,7 +115,6 @@ describe('Riot Service', () => {
                     mockInfo: 'mockInfoData',
                 },
             });
-            expect(global.fetch).toHaveBeenCalled();
             expect(global.fetch).toHaveBeenCalledTimes(1);
             expect(global.fetch).toHaveBeenCalledWith(
                 expect.stringContaining(mocks.matchid),
@@ -135,7 +127,6 @@ describe('Riot Service', () => {
             (global.fetch as jest.Mock).mockRejectedValue(mockRiotAPIError);
 
             await expect(getPUUIDBySummonerNameAndTag(mocks.name, mocks.tag)).rejects.toThrow(mockRiotAPIError);
-            expect(global.fetch).toHaveBeenCalled();
             expect(global.fetch).toHaveBeenCalledTimes(1);
         });
     });
@@ -169,7 +160,6 @@ describe('Riot Service', () => {
                     ],
                 },
             });
-            expect(global.fetch).toHaveBeenCalled();
             expect(global.fetch).toHaveBeenCalledTimes(1);
             expect(global.fetch).toHaveBeenCalledWith(
                 expect.stringContaining(mocks.matchid),
@@ -182,7 +172,6 @@ describe('Riot Service', () => {
             (global.fetch as jest.Mock).mockRejectedValue(mockRiotAPIError);
 
             await expect(getPUUIDBySummonerNameAndTag(mocks.name, mocks.tag)).rejects.toThrow(mockRiotAPIError);
-            expect(global.fetch).toHaveBeenCalled();
             expect(global.fetch).toHaveBeenCalledTimes(1);
         });
     });
