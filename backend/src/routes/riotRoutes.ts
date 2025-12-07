@@ -8,14 +8,14 @@ const router = express.Router();
  */
 
 // GET a PUUID by summoner name and tag
-router.get('/summoner/:summonerName/:tagLine', riotController.getPUUIDHandler);
+router.get('/summoner/:summonerName/:tagLine', riotController.getPUUIDController);
 
 // GET recent matches by PUUID
-router.get('/matches/:puuid', riotController.getRecentMatchesHandler);
+router.get('/matches/:puuid', riotController.getRecentMatchesController);
 
 
 // GET player summary by PUUID and match ID
-router.get('/player-summary/:puuid/:matchID', riotController.getPlayerSummaryHandler);
+router.get('/player-summary/:puuid/:matchID', riotController.getPlayerSummaryController);
 
 
 export default router;
