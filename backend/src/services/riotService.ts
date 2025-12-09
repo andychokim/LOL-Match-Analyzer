@@ -12,17 +12,17 @@ import { HEADERS, REGION } from '../config';
 /**
  * Custom error class for Riot API errors.
  */
-export class RiotAPIError extends Error {
-    statusCode?: number;
-    responseBody?: string;
+// export class RiotAPIError extends Error {
+//     statusCode: number;
+//     message: string;
 
-    constructor(message: string, statusCode?: number, responseBody?: string) {
-        super(message);
-        this.name = 'RiotAPIError';
-        this.statusCode = statusCode;
-        this.responseBody = responseBody;
-    }
-}
+//     constructor(statusCode: number, message: string) {
+//         super(message);
+//         this.name = 'RiotAPIError';
+//         this.statusCode = statusCode;
+//         this.message = message;
+//     }
+// }
 
 /**
  * helper function for sending requests
@@ -34,24 +34,20 @@ async function sendRequest(url: string): Promise<any> {
         const response = await fetch(url, { headers: HEADERS as any });
 
         // throw the error so the catch block will handle it
-        if (!response.ok) {
-            const responseText = await response.text();
-            throw new RiotAPIError(
-                `API request failed: ${response.status} - ${responseText}`,
-                response.status,
-                responseText
-            );
-        }
-
+        // if (!response.ok) throw new RiotAPIError(response.status, response.statusText);
+        if (!response.ok) throw new Error(`${response.status}: ${response.statusText}`);
+        
         return await response.json();
     } catch (error) {
-        if (error instanceof RiotAPIError) {
-            console.error(error);
-            throw error;
-        }
+        // if (error instanceof RiotAPIError) {
+        //     console.error(error);
+        //     throw error;
+        // }
 
-        console.error(`Network error occurred while accessing ${url}: ${error}`);
-        throw new RiotAPIError(`Network error occurred: ${String(error)}`, 0, String(error));
+        // console.error(`Network error occurred while accessing ${url}: ${error}`);
+        // throw new Error('500: Network Error');
+        console.error(error);
+        throw error;
     }
 }
 

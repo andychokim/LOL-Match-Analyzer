@@ -1,5 +1,5 @@
 import { 
-    RiotAPIError,
+    // RiotAPIError,
     getMatchDetailsByMatchID,
     getMatchTimelineByMatchID,
     getPUUIDBySummonerNameAndTag,
@@ -12,15 +12,9 @@ const mocks = {
     name: 'mockName',
     tag: 'mockTag',
     matchid: 'mockMatchID',
-    errorCode: 500,
-    errorBody: 'Not Found',
 }
 
-const mockRiotAPIError = new RiotAPIError (
-    `API request failed: ${mocks.errorCode} - ${mocks.errorBody}`,
-    mocks.errorCode,
-    mocks.errorBody,
-)
+const mockError = new Error('404: Not Found');
 
 describe('Riot Service', () => {
 
@@ -54,11 +48,11 @@ describe('Riot Service', () => {
             );
         });
 
-        it('should throw RiotAPIError when an error occurred', async () => {
+        it('should throw an error when it occurred', async () => {
 
-            (global.fetch as jest.Mock).mockRejectedValue(mockRiotAPIError);
+            (global.fetch as jest.Mock).mockRejectedValue(mockError);
 
-            await expect(getPUUIDBySummonerNameAndTag(mocks.name, mocks.tag)).rejects.toThrow(mockRiotAPIError);
+            await expect(getPUUIDBySummonerNameAndTag(mocks.name, mocks.tag)).rejects.toBe(mockError);
             expect(global.fetch).toHaveBeenCalledTimes(1);
         });
     });
@@ -83,9 +77,9 @@ describe('Riot Service', () => {
 
         it('should throw RiotAPIError when an error occurred', async () => {
 
-            (global.fetch as jest.Mock).mockRejectedValue(mockRiotAPIError);
+            (global.fetch as jest.Mock).mockRejectedValue(mockError);
 
-            await expect(getPUUIDBySummonerNameAndTag(mocks.name, mocks.tag)).rejects.toThrow(mockRiotAPIError);
+            await expect(getPUUIDBySummonerNameAndTag(mocks.name, mocks.tag)).rejects.toBe(mockError);
             expect(global.fetch).toHaveBeenCalledTimes(1);
         });
     });
@@ -124,9 +118,9 @@ describe('Riot Service', () => {
 
         it('should throw RiotAPIError when an error occurred', async () => {
 
-            (global.fetch as jest.Mock).mockRejectedValue(mockRiotAPIError);
+            (global.fetch as jest.Mock).mockRejectedValue(mockError);
 
-            await expect(getPUUIDBySummonerNameAndTag(mocks.name, mocks.tag)).rejects.toThrow(mockRiotAPIError);
+            await expect(getPUUIDBySummonerNameAndTag(mocks.name, mocks.tag)).rejects.toBe(mockError);
             expect(global.fetch).toHaveBeenCalledTimes(1);
         });
     });
@@ -169,9 +163,9 @@ describe('Riot Service', () => {
 
         it('should throw RiotAPIError when an error occurred', async () => {
 
-            (global.fetch as jest.Mock).mockRejectedValue(mockRiotAPIError);
+            (global.fetch as jest.Mock).mockRejectedValue(mockError);
 
-            await expect(getPUUIDBySummonerNameAndTag(mocks.name, mocks.tag)).rejects.toThrow(mockRiotAPIError);
+            await expect(getPUUIDBySummonerNameAndTag(mocks.name, mocks.tag)).rejects.toBe(mockError);
             expect(global.fetch).toHaveBeenCalledTimes(1);
         });
     });

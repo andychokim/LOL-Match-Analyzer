@@ -2,74 +2,113 @@ import { Request, Response } from 'express';
 import * as riotService from '../services/riotService';
 import { getPlayerSummary } from '../services/playerSummaryService';
 
+
+// playerSummary model for post operation
+import { playerSummaryModel } from '../models/playerSummaryModel';
+
+// define APIError interface for error handling
+export interface APIError extends Error {
+    status: number;
+    statusText: string;
+}
+
+// controllers
 /**
- * routes
+ * Get a PUUID by summoner name and tag
+ * @param req params: summonerName, tagLine
+ * @param res json formatted puuid for successful request, status code and error message for failed request
  */
-// Get a PUUID by summoner name and tag
 export async function getPUUIDController(req: Request, res: Response) {
     try {
         const { summonerName, tagLine } = req.params;
         console.log(`Fetching PUUID for ${summonerName}#${tagLine}`);
 
         const puuid = await riotService.getPUUIDBySummonerNameAndTag(summonerName, tagLine);
-        res.json(puuid);
+        res.status(200).json(puuid);
     }
-    catch (error: any) {
-        const statusCode = error.statusCode;
+    catch (error: unknown) {
+        const apiError = error as APIError;
+        const statusCode = apiError.status || 500;
+        const message = apiError.statusText || 'Internal Server Error';
 
-        if (statusCode) {
-            if (statusCode === 400) res.status(400).json({ error: 'Bad Request' });
-            else if (statusCode === 401) res.status(401).json({ error: 'Unauthorized: Invalid API key' });
-            else if (statusCode === 403) res.status(403).json({ error: 'Forbidden: Access denied' });
-            else if (statusCode === 404) res.status(404).json({ error: 'Summoner not found' });
-            else if (statusCode === 429) res.status(429).json({ error: 'Rate limit exceeded' });
-        }
-        else res.status(500).json({ error: 'Internal Server Error' });
+        res.status(statusCode).json({ error: message } );
     }
 };
 
-// Get recent matches by PUUID
+/**
+ * Get recent matches by PUUID
+ * @param req params: puuid
+ * @param res json formatted array of match IDs for successful request, status code and error message for failed request
+ */
 export async function getRecentMatchesController(req: Request, res: Response) {
     try {
         const { puuid } = req.params;
         console.log(`Fetching recent matches for PUUID: ${puuid}`);
 
         const matches = await riotService.getRecentMatchesByPUUID(puuid);
-        res.json(matches);
+        res.status(200).json(matches);
     }
-    catch (error: any) {
-        const statusCode = error.statusCode;
+    catch (error: unknown) {
+        const apiError = error as APIError;
+        const statusCode = apiError.status || 500;
+        const message = apiError.statusText || 'Internal Server Error';
 
-        if (statusCode) {
-            if (statusCode === 400) res.status(400).json({ error: 'Bad Request' });
-            else if (statusCode === 401) res.status(401).json({ error: 'Unauthorized: Invalid API key' });
-            else if (statusCode === 403) res.status(403).json({ error: 'Forbidden: Access denied' });
-            else if (statusCode === 404) res.status(404).json({ error: 'Summoner not found' });
-            else if (statusCode === 429) res.status(429).json({ error: 'Rate limit exceeded' });
-        }
-        else res.status(500).json({ error: 'Internal Server Error' });
+        res.status(statusCode).json({ error: message } );
     }
 };
 
-// Get a player summary by PUUID and match ID
+/**
+ * Get a player summary by PUUID and match ID
+ * @param req params: puuid, matchID
+ * @param res json formatted player summary for successful request, status code and error message for failed request
+ */
 export async function getPlayerSummaryController(req: Request, res: Response) {
     try {
         const { puuid, matchID } = req.params;
         console.log(`Fetching player summary for PUUID: ${puuid} in Match ID: ${matchID}`);
 
         const data = await getPlayerSummary(puuid, matchID);
-        res.json(data);
+        res.status(200).json(data);
     }
-    catch (error: any) {
-        const statusCode = error.statusCode;
+    catch (error: unknown) {
+        const apiError = error as APIError;
+        const statusCode = apiError.status || 500;
+        const message = apiError.statusText || 'Internal Server Error';
 
-        if (statusCode) {
-            if (statusCode === 400) res.status(400).json({ error: 'Bad Request' });
-            else if (statusCode === 401) res.status(401).json({ error: 'Unauthorized: Invalid API key' });
-            else if (statusCode === 403) res.status(403).json({ error: 'Forbidden: Access denied' });
-            else if (statusCode === 404) res.status(404).json({ error: 'Summoner not found' });
-            else if (statusCode === 429) res.status(429).json({ error: 'Rate limit exceeded' });
-        }
-        else res.status(500).json({ error: 'Internal Server Error' });
+        res.status(statusCode).json({ error: message } );
+    }
+};
+
+/**
+ * Post a player summary to the database
+ * @param req params: puuid, matchID
+ * @param res success message for successful request, status code and error message for failed request
+ */
+export async function postPlayerSummaryController(req: Request, res: Response) {
+
+    const { puuid, matchid, analysis } = req.body;
+
+    // check for any missing parameters
+    const missingParams = [];
+    if (!puuid) {
+        missingParams.push('puuid');
+    }
+    if (!matchid) {
+        missingParams.push('matchid');
+    }
+    if (!analysis) {
+        missingParams.push('analysis');
+    }
+    if (missingParams.length > 0) {
+        res.status(400).json({ error: `Missing parameters: ${missingParams.join(', ')}` });
+    }
+
+    // save the player summary to the database
+    try {
+        const result = await playerSummaryModel.create({ puuid, matchid, analysis });
+        res.status(200).json(result);
+    }
+    catch (error: unknown) {
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 };

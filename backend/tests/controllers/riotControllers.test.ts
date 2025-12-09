@@ -1,13 +1,17 @@
 import { getPUUIDBySummonerNameAndTag, getRecentMatchesByPUUID } from '../../src/services/riotService';
 import { getPlayerSummary } from '../../src/services/playerSummaryService';
 import {
+    APIError,
     getPUUIDController,
     getRecentMatchesController,
     getPlayerSummaryController,
+    postPlayerSummaryController,
 } from '../../src/controllers/riotControllers';
+
 
 jest.mock('../../src/services/riotService');
 jest.mock('../../src/services/playerSummaryService');
+jest.mock('../../src/services/riotService');
 
 const mocks = {
     puuid: 'mockID',
@@ -23,7 +27,10 @@ const mockRes = {
     json: jest.fn().mockReturnThis(),
 };
 
-jest.mock('../../src/services/riotService');
+const mockError = {
+    status: 404,
+    message: 'Summoner not found',
+} as APIError;
 
 describe('Riot Controllers', () => {
 
@@ -31,7 +38,7 @@ describe('Riot Controllers', () => {
         jest.clearAllMocks();
     });
 
-    describe('getPUUIDHandler', () => {
+    describe.only('getPUUIDController', () => {
         const mockReq = {
             params: {
                 summonerName: mocks.name,
@@ -49,14 +56,15 @@ describe('Riot Controllers', () => {
             expect(getPUUIDBySummonerNameAndTag).toHaveBeenCalledWith(mocks.name, mocks.tag);
 
             // on successful response, status should not be called (defaults to 200)
-            expect(mockRes.status).not.toHaveBeenCalled();
+            expect(mockRes.status).toHaveBeenCalledTimes(1);
+            expect(mockRes.status).toHaveBeenCalledWith(200);
             expect(mockRes.json).toHaveBeenCalledTimes(1);
             expect(mockRes.json).toHaveBeenCalledWith(mocks.puuid);
         });
 
         it('should include error status and message in response when an error occurs', async () => {
 
-            (getPUUIDBySummonerNameAndTag as jest.Mock).mockRejectedValueOnce(Error);
+            (getPUUIDBySummonerNameAndTag as jest.Mock).mockRejectedValueOnce(mockError);
 
             await getPUUIDController(mockReq as any, mockRes as any);
 
@@ -65,11 +73,13 @@ describe('Riot Controllers', () => {
 
             // on error, status should be called once
             expect(mockRes.status).toHaveBeenCalledTimes(1);
+            expect(mockRes.status).toHaveBeenCalledWith(mockError.status);
             expect(mockRes.json).toHaveBeenCalledTimes(1);
+            expect(mockRes.json).toHaveBeenCalledWith(mockError.message);
         });
     });
 
-    describe('getRecentMatchesHandler', () => {
+    describe('getRecentMatchesController', () => {
         const mockReq = {
             params: {
                 puuid: mocks.puuid,
@@ -86,7 +96,8 @@ describe('Riot Controllers', () => {
             expect(getRecentMatchesByPUUID).toHaveBeenCalledTimes(1);
             expect(getRecentMatchesByPUUID).toHaveBeenCalledWith(mocks.puuid);
 
-            expect(mockRes.status).not.toHaveBeenCalled();
+            expect(mockRes.status).toHaveBeenCalledTimes(1);
+            expect(mockRes.status).toHaveBeenCalledWith(200);
             expect(mockRes.json).toHaveBeenCalledTimes(1);
             expect(mockRes.json).toHaveBeenCalledWith([mocks.matchid]);
         });
@@ -105,7 +116,7 @@ describe('Riot Controllers', () => {
         });
     });
 
-    describe('getPlayerSummaryHandler', () => {
+    describe('getPlayerSummaryController', () => {
         const mockReq = {
             params: {
                 puuid: mocks.puuid,
@@ -122,7 +133,8 @@ describe('Riot Controllers', () => {
             expect(getPlayerSummary).toHaveBeenCalledTimes(1);
             expect(getPlayerSummary).toHaveBeenCalledWith(mocks.puuid, mocks.matchid);
 
-            expect(mockRes.status).not.toHaveBeenCalled();
+            expect(mockRes.status).toHaveBeenCalledTimes(1);
+            expect(mockRes.status).toHaveBeenCalledWith(200);
             expect(mockRes.json).toHaveBeenCalledTimes(1);
             expect(mockRes.json).toHaveBeenCalledWith({ stats: mocks.stats, timeline: mocks.timeline });
         });
@@ -137,6 +149,38 @@ describe('Riot Controllers', () => {
             expect(getPlayerSummary).toHaveBeenCalledWith(mocks.puuid, mocks.matchid);
 
             expect(mockRes.status).toHaveBeenCalledTimes(1);
+            expect(mockRes.json).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    describe('postPlayerSummaryController', () => {
+        const mockReq = {
+            params: {
+                puuid: mocks.puuid,
+                matchid: mocks.matchid,
+                body: {
+                    stats: mocks.stats,
+                    timeline: mocks.timeline,
+                }
+            }
+        };
+
+        it('should include a valid response for a valid request', async () => {
+
+            await postPlayerSummaryController(mockReq as any, mockRes as any);
+
+            expect(mockRes.status).toHaveBeenCalledTimes(1);
+            expect(mockRes.status).toHaveBeenCalledWith(200);
+            expect(mockRes.json).toHaveBeenCalledTimes(1);
+            expect(mockRes.json).toHaveBeenCalledWith(mockReq.params);
+        });
+
+        it('should include error status and message in response when an error occurs', async () => {
+
+            await postPlayerSummaryController(mockReq as any, mockRes as any);
+
+            expect(mockRes.status).toHaveBeenCalledTimes(1);
+            expect(mockRes.status).toHaveBeenCalledWith(500);
             expect(mockRes.json).toHaveBeenCalledTimes(1);
         });
     });
