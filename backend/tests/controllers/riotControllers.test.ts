@@ -7,11 +7,12 @@ import {
     getPlayerSummaryController,
     postPlayerSummaryController,
 } from '../../src/controllers/riotControllers';
+import { playerSummaryModel } from '../../src/models/playerSummaryModel';
 
 
 jest.mock('../../src/services/riotService');
 jest.mock('../../src/services/playerSummaryService');
-jest.mock('../../src/services/riotService');
+jest.mock('../../src/models/playerSummaryModel');
 
 const mocks = {
     puuid: 'mockID',
@@ -29,8 +30,9 @@ const mockRes = {
 
 const mockError = {
     status: 404,
-    message: 'Summoner not found',
+    statusText: 'Summoner not found',
 } as APIError;
+
 
 describe('Riot Controllers', () => {
 
@@ -38,7 +40,7 @@ describe('Riot Controllers', () => {
         jest.clearAllMocks();
     });
 
-    describe.only('getPUUIDController', () => {
+    describe('getPUUIDController', () => {
         const mockReq = {
             params: {
                 summonerName: mocks.name,
@@ -47,7 +49,6 @@ describe('Riot Controllers', () => {
         };
 
         it('should include a valid PUUID in response for valid request', async () => {
-
             (getPUUIDBySummonerNameAndTag as jest.Mock).mockResolvedValueOnce(mocks.puuid);
 
             await getPUUIDController(mockReq as any, mockRes as any);
@@ -63,7 +64,6 @@ describe('Riot Controllers', () => {
         });
 
         it('should include error status and message in response when an error occurs', async () => {
-
             (getPUUIDBySummonerNameAndTag as jest.Mock).mockRejectedValueOnce(mockError);
 
             await getPUUIDController(mockReq as any, mockRes as any);
@@ -75,7 +75,7 @@ describe('Riot Controllers', () => {
             expect(mockRes.status).toHaveBeenCalledTimes(1);
             expect(mockRes.status).toHaveBeenCalledWith(mockError.status);
             expect(mockRes.json).toHaveBeenCalledTimes(1);
-            expect(mockRes.json).toHaveBeenCalledWith(mockError.message);
+            expect(mockRes.json).toHaveBeenCalledWith({ error: mockError.statusText });
         });
     });
 
@@ -87,7 +87,6 @@ describe('Riot Controllers', () => {
         };
 
         it('should include a valid matchids in response for valid request', async () => {
-
             (getRecentMatchesByPUUID as jest.Mock).mockResolvedValueOnce([mocks.matchid]);
 
             await getRecentMatchesController(mockReq as any, mockRes as any);
@@ -103,8 +102,7 @@ describe('Riot Controllers', () => {
         });
 
         it('should include error status and message in response when an error occurs', async () => {
-
-            (getRecentMatchesByPUUID as jest.Mock).mockRejectedValueOnce(Error);
+            (getRecentMatchesByPUUID as jest.Mock).mockRejectedValueOnce(mockError);
 
             await getRecentMatchesController(mockReq as any, mockRes as any);
 
@@ -112,7 +110,9 @@ describe('Riot Controllers', () => {
             expect(getRecentMatchesByPUUID).toHaveBeenCalledWith(mocks.puuid);
 
             expect(mockRes.status).toHaveBeenCalledTimes(1);
+            expect(mockRes.status).toHaveBeenCalledWith(mockError.status);
             expect(mockRes.json).toHaveBeenCalledTimes(1);
+            expect(mockRes.json).toHaveBeenCalledWith({ error: mockError.statusText });
         });
     });
 
@@ -125,7 +125,6 @@ describe('Riot Controllers', () => {
         };
 
         it('should include a valid player summary in response for valid request', async () => {
-
             (getPlayerSummary as jest.Mock).mockResolvedValueOnce({ stats: mocks.stats, timeline: mocks.timeline });
 
             await getPlayerSummaryController(mockReq as any, mockRes as any);
@@ -140,8 +139,7 @@ describe('Riot Controllers', () => {
         });
 
         it('should include error status and message in response when an error occurs', async () => {
-
-            (getPlayerSummary as jest.Mock).mockRejectedValueOnce(Error);
+            (getPlayerSummary as jest.Mock).mockRejectedValueOnce(mockError);
 
             await getPlayerSummaryController(mockReq as any, mockRes as any);
 
@@ -149,39 +147,69 @@ describe('Riot Controllers', () => {
             expect(getPlayerSummary).toHaveBeenCalledWith(mocks.puuid, mocks.matchid);
 
             expect(mockRes.status).toHaveBeenCalledTimes(1);
+            expect(mockRes.status).toHaveBeenCalledWith(mockError.status);
             expect(mockRes.json).toHaveBeenCalledTimes(1);
+            expect(mockRes.json).toHaveBeenCalledWith({ error: mockError.statusText });
         });
     });
 
     describe('postPlayerSummaryController', () => {
-        const mockReq = {
-            params: {
-                puuid: mocks.puuid,
-                matchid: mocks.matchid,
-                body: {
-                    stats: mocks.stats,
-                    timeline: mocks.timeline,
-                }
-            }
-        };
+        const mockReq = { body: {} };
 
         it('should include a valid response for a valid request', async () => {
+            mockReq.body = { 
+                puuid: mocks.puuid,
+                matchid: mocks.matchid,
+                analysis: {
+                    stats: mocks.stats, 
+                    timeline: mocks.timeline 
+                }
+            };
+
+            (playerSummaryModel.create as jest.Mock).mockResolvedValue(mockReq.body);
 
             await postPlayerSummaryController(mockReq as any, mockRes as any);
 
             expect(mockRes.status).toHaveBeenCalledTimes(1);
             expect(mockRes.status).toHaveBeenCalledWith(200);
             expect(mockRes.json).toHaveBeenCalledTimes(1);
-            expect(mockRes.json).toHaveBeenCalledWith(mockReq.params);
+            expect(mockRes.json).toHaveBeenCalledWith(mockReq.body);
         });
 
-        it('should include error status and message in response when an error occurs', async () => {
+        it('should include correct missing parameters in the error message', async () => {
+            mockReq.body = {
+                puuid: mocks.puuid,
+                // missing fields
+            };
+
+            (playerSummaryModel.create as jest.Mock).mockResolvedValue(mockReq.body);
+
+            await postPlayerSummaryController(mockReq as any, mockRes as any);
+
+            expect(mockRes.status).toHaveBeenCalledTimes(1);
+            expect(mockRes.status).toHaveBeenCalledWith(400);
+            expect(mockRes.json).toHaveBeenCalledTimes(1);
+            expect(mockRes.json).toHaveBeenCalledWith({ error: 'Missing parameters: matchid, analysis' });
+        });
+
+        it('should result in a 500 error when an unexpected error occurs', async () => {
+            mockReq.body = { 
+                puuid: mocks.puuid,
+                matchid: mocks.matchid,
+                analysis: {
+                    stats: mocks.stats, 
+                    timeline: mocks.timeline 
+                }
+            };
+
+            (playerSummaryModel.create as jest.Mock).mockRejectedValueOnce(mockError);
 
             await postPlayerSummaryController(mockReq as any, mockRes as any);
 
             expect(mockRes.status).toHaveBeenCalledTimes(1);
             expect(mockRes.status).toHaveBeenCalledWith(500);
             expect(mockRes.json).toHaveBeenCalledTimes(1);
+            expect(mockRes.json).toHaveBeenCalledWith({ error: 'Internal server error' });
         });
     });
 });

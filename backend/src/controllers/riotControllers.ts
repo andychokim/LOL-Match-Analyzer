@@ -100,15 +100,15 @@ export async function postPlayerSummaryController(req: Request, res: Response) {
         missingParams.push('analysis');
     }
     if (missingParams.length > 0) {
-        res.status(400).json({ error: `Missing parameters: ${missingParams.join(', ')}` });
+        return res.status(400).json({ error: `Missing parameters: ${missingParams.join(', ')}` });
     }
 
     // save the player summary to the database
     try {
         const result = await playerSummaryModel.create({ puuid, matchid, analysis });
-        res.status(200).json(result);
+        return res.status(200).json(result);
     }
     catch (error: unknown) {
-        res.status(500).json({ error: 'Internal Server Error' });
+        return res.status(500).json({ error: 'Internal server error' });
     }
 };
