@@ -24,8 +24,8 @@ describe('Riot Routes', () => {
     });
 
     describe('GET /summoner/:summonerName/:tagLine', () => {
-        it('should route to getPUUIDHandler ', async () => {
 
+        it('should route to getPUUIDHandler ', async () => {
             (riotController.getPUUIDController as jest.Mock).mockImplementationOnce(async (_req, res) => {
                 res.status(200).json(mocks.puuid);
             });
@@ -41,20 +41,20 @@ describe('Riot Routes', () => {
         it('should handle errors in getPUUIDHandler', async () => {
 
             (riotController.getPUUIDController as jest.Mock).mockImplementationOnce(async (_req, res) => {
-                res.status(500).json({ error: 'Internal Server Error' });
+                res.status(500).json({ error: 'Internal server error' });
             });
 
             const response = await request(app).get(`/api/riot/summoner/${mocks.name}/${mocks.tag}`);
 
             expect(response.status).toBe(500);
-            expect(response.body).toEqual({ error: 'Internal Server Error' });
+            expect(response.body).toEqual({ error: 'Internal server error' });
             expect(riotController.getPUUIDController).toHaveBeenCalledTimes(1);
         });
     });
 
     describe('GET /matches/:puuid', () => {
-        it('should route to getRecentMatchesHandler ', async () => {
 
+        it('should route to getRecentMatchesHandler ', async () => {
             (riotController.getRecentMatchesController as jest.Mock).mockImplementationOnce(async (_req, res) => {
                 res.status(200).json([mocks.matchid]);
             });
@@ -68,26 +68,25 @@ describe('Riot Routes', () => {
         });
 
         it('should handle errors in getRecentMatchesHandler', async () => {
-
             (riotController.getRecentMatchesController as jest.Mock).mockImplementationOnce(async (_req, res) => {
-                res.status(500).json({ error: 'Internal Server Error' });
+                res.status(500).json({ error: 'Internal server error' });
             });
 
             const response = await request(app).get(`/api/riot/matches/${mocks.puuid}`);
 
             expect(response.status).toBe(500);
-            expect(response.body).toEqual({ error: 'Internal Server Error' });
+            expect(response.body).toEqual({ error: 'Internal server error' });
             expect(riotController.getRecentMatchesController).toHaveBeenCalledTimes(1);
         });
     });
 
     describe('GET /player-summary/:puuid/:matchID', () => {
-        it('should route to getPlayerSummaryHandler ', async () => {
 
+        it('should route to getPlayerSummaryHandler ', async () => {
             (riotController.getPlayerSummaryController as jest.Mock).mockImplementationOnce(async (_req, res) => {
                 res.status(200).json({ 
-                    player_stats: mocks.stats,
-                    player_timeline: [mocks.timeline],
+                    stats: mocks.stats,
+                    timeline: [mocks.timeline],
                 });
             });
 
@@ -96,8 +95,8 @@ describe('Riot Routes', () => {
 
             expect(response.status).toBe(200);
             expect(response.body).toStrictEqual({ 
-                player_stats: mocks.stats,
-                player_timeline: [mocks.timeline],
+                stats: mocks.stats,
+                timeline: [mocks.timeline],
             });
             expect(response.text).toContain(mocks.stats);
             expect(response.text).toContain(mocks.timeline);
@@ -105,16 +104,55 @@ describe('Riot Routes', () => {
         });
 
         it('should handle errors in getPlayerSummaryHandler', async () => {
-
             (riotController.getPlayerSummaryController as jest.Mock).mockImplementationOnce(async (_req, res) => {
-                res.status(500).json({ error: 'Internal Server Error' });
+                res.status(500).json({ error: 'Internal server error' });
             });
 
             const response = await request(app).get(`/api/riot/player-summary/${mocks.puuid}/${mocks.matchid}`);
 
             expect(response.status).toBe(500);
-            expect(response.body).toEqual({ error: 'Internal Server Error' });
+            expect(response.body).toEqual({ error: 'Internal server error' });
             expect(riotController.getPlayerSummaryController).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    describe('POST /player-summary', () => {
+
+        it('should route to postPlayerSummaryHandler ', async () => {
+            const mockReq = {
+                puuid: mocks.puuid,
+                matchid: mocks.matchid,
+                analysis: {
+                    stats: mocks.stats,
+                    timeline: [mocks.timeline],
+                },
+            };
+
+            (riotController.postPlayerSummaryController as jest.Mock).mockImplementationOnce(async (_req, res) => {
+                res.status(200).json(mockReq);
+            });
+
+            const response = await request(app).post('/api/riot/player-summary');
+
+            expect(riotController.postPlayerSummaryController).toHaveBeenCalledTimes(1);
+            expect(response.status).toBe(200);
+            expect(response.body).toStrictEqual(mockReq);
+            expect(response.text).toContain(mocks.puuid);
+            expect(response.text).toContain(mocks.matchid);
+            expect(response.text).toContain(mocks.stats);
+            expect(response.text).toContain(mocks.timeline);
+        });
+
+        it('should handle errors in postPlayerSummaryHandler', async () => {
+            (riotController.postPlayerSummaryController as jest.Mock).mockImplementationOnce(async (_req, res) => {
+                res.status(500).json({ error: 'Internal server error' });
+            });
+
+            const response = await request(app).post('/api/riot/player-summary');
+
+            expect(riotController.postPlayerSummaryController).toHaveBeenCalledTimes(1);
+            expect(response.status).toBe(500);
+            expect(response.body).toEqual({ error: 'Internal server error' });
         });
     });
 });

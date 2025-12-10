@@ -99,6 +99,12 @@ export async function postPlayerSummaryController(req: Request, res: Response) {
     if (!analysis) {
         missingParams.push('analysis');
     }
+    if (!analysis.stats) {
+        missingParams.push('analysis.stats');
+    }
+    if (!analysis.timeline) {
+        missingParams.push('analysis.timeline');
+    }
     if (missingParams.length > 0) {
         return res.status(400).json({ error: `Missing parameters: ${missingParams.join(', ')}` });
     }
@@ -106,9 +112,11 @@ export async function postPlayerSummaryController(req: Request, res: Response) {
     // save the player summary to the database
     try {
         const result = await playerSummaryModel.create({ puuid, matchid, analysis });
+        console.log(`Player summary saved successfully: ${result}`);
         return res.status(200).json(result);
     }
     catch (error: unknown) {
+        console.error(`Error saving player summary: ${error}`);
         return res.status(500).json({ error: 'Internal server error' });
     }
 };

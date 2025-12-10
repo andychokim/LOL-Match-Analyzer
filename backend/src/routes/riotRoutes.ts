@@ -17,7 +17,7 @@ router.get('/matches/:puuid', riotController.getRecentMatchesController);
 router.get('/player-summary/:puuid/:matchID', riotController.getPlayerSummaryController);
 
 // POST player summary
-// router.post()
+router.post('/player-summary', riotController.postPlayerSummaryController);
 
 
 export default router;

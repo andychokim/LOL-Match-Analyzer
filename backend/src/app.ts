@@ -21,5 +21,8 @@ app.use('/', heroRoutes);
 // riotRoutes
 app.use('/api/riot', riotRoutes);
 
+// mongoose mongoDB connection
+
+
 
 export default app;
