@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 // middlewares
-app.use((req: Request, res: Response, next: NextFunction) => {
+app.use((req: Request, _res: Response, next: NextFunction) => {
     console.log(req.path, req.method);
     next();
 });
