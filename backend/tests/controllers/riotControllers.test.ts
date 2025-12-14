@@ -1,13 +1,13 @@
 import { getPUUIDBySummonerNameAndTag, getRecentMatchesByPUUID } from '../../src/services/riotService';
 import { getPlayerSummary } from '../../src/services/playerSummaryService';
 import {
-    APIError,
     getPUUIDController,
     getRecentMatchesController,
     getPlayerSummaryController,
     postPlayerSummaryController,
 } from '../../src/controllers/riotControllers';
 import { playerSummaryModel } from '../../src/models/playerSummaryModel';
+import { APIError } from '../../src/errors/APIError';
 
 
 jest.mock('../../src/services/riotService');
@@ -28,11 +28,7 @@ const mockRes = {
     json: jest.fn().mockReturnThis(),
 };
 
-const mockError = {
-    status: 404,
-    statusText: 'Summoner not found',
-} as APIError;
-
+const mockError = new APIError(404, 'Summoner not found');
 
 describe('Riot Controllers', () => {
 
@@ -75,7 +71,7 @@ describe('Riot Controllers', () => {
             expect(mockRes.status).toHaveBeenCalledTimes(1);
             expect(mockRes.status).toHaveBeenCalledWith(mockError.status);
             expect(mockRes.json).toHaveBeenCalledTimes(1);
-            expect(mockRes.json).toHaveBeenCalledWith({ error: mockError.statusText });
+            expect(mockRes.json).toHaveBeenCalledWith({ error: `${mockError.status}: ${mockError.statusText}` });
         });
     });
 
@@ -112,7 +108,7 @@ describe('Riot Controllers', () => {
             expect(mockRes.status).toHaveBeenCalledTimes(1);
             expect(mockRes.status).toHaveBeenCalledWith(mockError.status);
             expect(mockRes.json).toHaveBeenCalledTimes(1);
-            expect(mockRes.json).toHaveBeenCalledWith({ error: mockError.statusText });
+            expect(mockRes.json).toHaveBeenCalledWith({ error: `${mockError.status}: ${mockError.statusText}` });
         });
     });
 
@@ -120,7 +116,7 @@ describe('Riot Controllers', () => {
         const mockReq = {
             params: {
                 puuid: mocks.puuid,
-                matchID: mocks.matchid,
+                matchid: mocks.matchid,
             }
         };
 
@@ -149,7 +145,7 @@ describe('Riot Controllers', () => {
             expect(mockRes.status).toHaveBeenCalledTimes(1);
             expect(mockRes.status).toHaveBeenCalledWith(mockError.status);
             expect(mockRes.json).toHaveBeenCalledTimes(1);
-            expect(mockRes.json).toHaveBeenCalledWith({ error: mockError.statusText });
+            expect(mockRes.json).toHaveBeenCalledWith({ error: `${mockError.status}: ${mockError.statusText}` });
         });
     });
 
@@ -190,6 +186,10 @@ describe('Riot Controllers', () => {
             expect(mockRes.status).toHaveBeenCalledWith(400);
             expect(mockRes.json).toHaveBeenCalledTimes(1);
             expect(mockRes.json).toHaveBeenCalledWith({ error: 'Missing parameters: matchid, analysis' });
+        });
+
+        it('should not post and notify the user with a correct error message if duplicate entry exists', async () => {
+            // work on this later
         });
 
         it('should result in a 500 error when an unexpected error occurs', async () => {

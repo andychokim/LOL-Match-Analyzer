@@ -73,7 +73,7 @@ class TestGetRecentMatches:
     # Test for successful recent matches retrieval
     @patch("src.riot_api.riot_client.requests.get")
     def test_get_recentMatches(self, mock_get):
-        response = ["matchID_1", "matchID_2", "matchID_3"]
+        response = ["matchid_1", "matchid_2", "matchid_3"]
         mock_get.return_value.status_code = 200
         mock_get.return_value.json.return_value = response
 
@@ -121,13 +121,13 @@ class TestGetMatchDetails:
     Test suite for the get_matchDetails function.
     """
     def setup_method(self):
-        self.matchId = "matchID_1"
+        self.matchId = "matchid_1"
 
     # Test for successful match details retrieval
     @patch("src.riot_api.riot_client.requests.get")
     def test_get_matchDetails(self, mock_get):
         response = {
-            "metadata": {"dataVersion": "1", "matchId": "matchID_1", "participants": []},
+            "metadata": {"dataVersion": "1", "matchId": "matchid_1", "participants": []},
             "info": {"gameId": 123456789}
         }
         mock_get.return_value.status_code = 200
@@ -175,13 +175,13 @@ class TestGetMatchTimeline:
     Test suite for the get_matchTimeline function.
     """
     def setup_method(self):
-        self.matchId = "matchID_1"
+        self.matchId = "matchid_1"
 
     # Test for successful match details retrieval
     @patch("src.riot_api.riot_client.requests.get")
     def test_get_matchTimeLine(self, mock_get):
         response = {
-            "metadata": {"dataVersion": "1", "matchId": "matchID_1", "participants": []},
+            "metadata": {"dataVersion": "1", "matchId": "matchid_1", "participants": []},
             "info": {"gameId": 123456789}
         }
         mock_get.return_value.status_code = 200

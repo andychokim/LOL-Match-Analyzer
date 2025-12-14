@@ -8,6 +8,7 @@
  */
 
 import { HEADERS, REGION } from '../config';
+import { APIError } from '../errors/APIError';
 
 /**
  * Custom error class for Riot API errors.
@@ -34,20 +35,17 @@ async function sendRequest(url: string): Promise<any> {
         const response = await fetch(url, { headers: HEADERS as any });
 
         // throw the error so the catch block will handle it
-        // if (!response.ok) throw new RiotAPIError(response.status, response.statusText);
-        if (!response.ok) throw new Error(`${response.status}: ${response.statusText}`);
+        if (!response.ok) throw new APIError(response.status, response.statusText);
         
+        console.log(`Riot API Response - Status: ${response.status}, Message: ${response.statusText}`);
         return await response.json();
-    } catch (error) {
-        // if (error instanceof RiotAPIError) {
-        //     console.error(error);
-        //     throw error;
-        // }
+    } catch (error: unknown) {
+        const apiError = error as APIError;
+        const statusCode = apiError.status || 500;
+        const message = apiError.statusText || 'Internal Server Error';
 
-        // console.error(`Network error occurred while accessing ${url}: ${error}`);
-        // throw new Error('500: Network Error');
-        console.error(error);
-        throw error;
+        console.error(`Riot API Error - Status: ${statusCode}, Message: ${message}`);
+        throw new APIError(statusCode, message);
     }
 }
 

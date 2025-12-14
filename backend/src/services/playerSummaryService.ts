@@ -25,8 +25,8 @@ interface FrameData {
 }
 
 interface PlayerSummary {
-    player_stats: PlayerDetails;
-    player_timeline: FrameData[];
+    player_stats: PlayerDetails | null;
+    player_timeline: FrameData[] | null;
 }
 
 const CHALLENGES_KEEP_KEYS = new Set([
@@ -123,7 +123,7 @@ async function getPlayerDetails(puuid: string, match_id: string): Promise<Player
  * Extracts player-specific data from match timeline.
  * @returns a list of frames containing events and in-game stats for the player.
  */
-async function getPlayerTimeline(puuid: string, match_id: string): Promise<FrameData[]> {
+async function getPlayerTimeline(puuid: string, match_id: string): Promise<FrameData[] | null> {
     const match_events = await getMatchTimelineByMatchID(match_id);
     const frameData: FrameData[] = [];
 
@@ -194,9 +194,11 @@ async function getPlayerTimeline(puuid: string, match_id: string): Promise<Frame
                 });
             }
         }
+        return frameData;
     }
 
-    return frameData;
+    return null;
+
 };
 
 /**

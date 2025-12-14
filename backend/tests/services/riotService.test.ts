@@ -1,3 +1,4 @@
+import { APIError } from '../../src/errors/APIError';
 import { 
     // RiotAPIError,
     getMatchDetailsByMatchID,
@@ -14,7 +15,7 @@ const mocks = {
     matchid: 'mockMatchID',
 }
 
-const mockError = new Error('404: Not Found');
+const mockError = new APIError(404, 'Not Found');
 
 describe('Riot Service', () => {
 
@@ -52,7 +53,7 @@ describe('Riot Service', () => {
 
             (global.fetch as jest.Mock).mockRejectedValue(mockError);
 
-            await expect(getPUUIDBySummonerNameAndTag(mocks.name, mocks.tag)).rejects.toBe(mockError);
+            await expect(getPUUIDBySummonerNameAndTag(mocks.name, mocks.tag)).rejects.toStrictEqual(mockError);
             expect(global.fetch).toHaveBeenCalledTimes(1);
         });
     });
@@ -79,7 +80,7 @@ describe('Riot Service', () => {
 
             (global.fetch as jest.Mock).mockRejectedValue(mockError);
 
-            await expect(getPUUIDBySummonerNameAndTag(mocks.name, mocks.tag)).rejects.toBe(mockError);
+            await expect(getPUUIDBySummonerNameAndTag(mocks.name, mocks.tag)).rejects.toStrictEqual(mockError);
             expect(global.fetch).toHaveBeenCalledTimes(1);
         });
     });
@@ -120,7 +121,7 @@ describe('Riot Service', () => {
 
             (global.fetch as jest.Mock).mockRejectedValue(mockError);
 
-            await expect(getPUUIDBySummonerNameAndTag(mocks.name, mocks.tag)).rejects.toBe(mockError);
+            await expect(getPUUIDBySummonerNameAndTag(mocks.name, mocks.tag)).rejects.toStrictEqual(mockError);
             expect(global.fetch).toHaveBeenCalledTimes(1);
         });
     });
@@ -165,7 +166,7 @@ describe('Riot Service', () => {
 
             (global.fetch as jest.Mock).mockRejectedValue(mockError);
 
-            await expect(getPUUIDBySummonerNameAndTag(mocks.name, mocks.tag)).rejects.toBe(mockError);
+            await expect(getPUUIDBySummonerNameAndTag(mocks.name, mocks.tag)).rejects.toStrictEqual(mockError);
             expect(global.fetch).toHaveBeenCalledTimes(1);
         });
     });
