@@ -22,5 +22,4 @@ app.use('/', heroRoutes);
 app.use('/api/riot', riotRoutes);
 
 
-
 export default app;

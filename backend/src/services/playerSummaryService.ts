@@ -13,7 +13,6 @@ interface PlayerDetails {
     wardsPlaced: number;
     detectorWardsPlaced: number;
     cs: number;
-    runes: any;
     challenge: Record<string, any>;
     win: boolean;
 }
@@ -31,41 +30,18 @@ interface PlayerSummary {
 
 const CHALLENGES_KEEP_KEYS = new Set([
     // Core performance
-    'kda',
-    'damagePerMinute',
     'teamDamagePercentage',
     'killParticipation',
     'goldPerMinute',
-    'visionScorePerMinute',
-
-    // Objective & Macro
-    'baronTakedowns',
-    'dragonTakedowns',
-    'riftHeraldTakedowns',
-    'turretTakedowns',
-    'voidMonsterKill',
 
     // Fighting / Skirmishing
     'soloKills',
-    'killsNearEnemyTurret',
-    'killsUnderOwnTurret',
-    'outnumberedKills',
-    'immobilizeAndKillWithAlly',
-    'enemyChampionImmobilizations',
 
     // Laning Phase
-    'laneMinionsFirst10Minutes',
     'maxCsAdvantageOnLaneOpponent',
     'maxLevelLeadLaneOpponent',
 
-    // Survivability
-    'damageTakenOnTeamPercentage',
-    'survivedSingleDigitHpCount',
-    'survivedThreeImmobilizesInFight',
-
     // Vision & Utility
-    'controlWardsPlaced',
-    'stealthWardsPlaced',
     'wardTakedowns',
     'visionScoreAdvantageLaneOpponent',
 ]);
@@ -106,7 +82,6 @@ async function getPlayerDetails(puuid: string, match_id: string): Promise<Player
                     wardsPlaced: player.wardsPlaced,
                     detectorWardsPlaced: player.detectorWardsPlaced,
                     cs: player.totalMinionsKilled + player.neutralMinionsKilled,
-                    runes: player.perks,
                     challenge: filtered_challenges,
                     win: player.win,
                 };
@@ -165,10 +140,13 @@ async function getPlayerTimeline(puuid: string, match_id: string): Promise<Frame
                         delete event.victimDamageReceived;
                         player_events.push(event);
                     }
-                } else if (event.type === 'ELITE_MONSTER_KILL' || event.type === 'FEAT_UPDATE') {
+                } else if (event.type === 'ELITE_MONSTER_KILL') {
+                    delete event.position;
+                    delete event.monsterSubType;
                     player_events.push(event);
                 } else if (event.type === 'BUILDING_KILL' || event.type === 'TURRET_PLATE_DESTROYED') {
                     if (event.killerId === playerId) {
+                        delete event.position;
                         player_events.push(event);
                     }
                 }
@@ -186,6 +164,16 @@ async function getPlayerTimeline(puuid: string, match_id: string): Promise<Frame
                 delete player_data.totalGold;
                 delete player_data.xp;
                 delete player_data.timeEnemySpentControlled;
+
+                delete player_data.championStats.bonusArmorPenPercent;
+                delete player_data.championStats.bonusMagicPenPercent;
+                delete player_data.championStats.healthMax;
+                delete player_data.championStats.healthRegen;
+                delete player_data.championStats.lifesteal;
+                delete player_data.championStats.omnivamp;
+                delete player_data.championStats.physicalVamp;
+                delete player_data.championStats.spellVamp;
+
 
                 frameData.push({
                     timestamp: frame_timestamp,
