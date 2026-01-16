@@ -15,14 +15,13 @@ export async function getPUUIDController(req: Request, res: Response) {
     console.log(`Fetching PUUID for ${summonerName}#${tagLine}`);
 
     try {
-
         const puuid = await getPUUIDBySummonerNameAndTag(summonerName, tagLine);
         return res.status(200).json(puuid);
     }
     catch (error: unknown) {
         const apiError = error as APIError;
-        const statusCode = apiError.status || 500;
-        const message = apiError.statusText || 'Internal Server Error';
+        const statusCode = apiError?.status || 500;
+        const message = apiError?.statusText || 'Internal Server Error';
 
         return res.status(statusCode).json({ error: `${statusCode}: ${message}` });
     }
@@ -43,8 +42,8 @@ export async function getRecentMatchesController(req: Request, res: Response) {
     }
     catch (error: unknown) {
         const apiError = error as APIError;
-        const statusCode = apiError.status || 500;
-        const message = apiError.statusText || 'Internal Server Error';
+        const statusCode = apiError?.status || 500;
+        const message = apiError?.statusText || 'Internal Server Error';
 
         return res.status(statusCode).json({ error: `${statusCode}: ${message}` });
     }
@@ -59,46 +58,51 @@ export async function getRecentMatchesController(req: Request, res: Response) {
 export async function getPlayerSummaryController(req: Request, res: Response) {
     const { puuid, matchid } = req.params;
 
-    // condition 1: check for any missing parameters
-    const missingParams = [];
-    if (!puuid) missingParams.push('puuid');
-    if (!matchid) missingParams.push('matchid');
-    if (missingParams.length > 0) return res.status(400).json({ error: `Missing parameters: ${missingParams.join(', ')}` });
+    // // condition 1: check for any missing parameters
+    // const missingParams = [];
+    // if (!puuid) missingParams.push('puuid');
+    // if (!matchid) missingParams.push('matchid');
+    // if (missingParams.length > 0) return res.status(400).json({ error: `Missing parameters: ${missingParams.join(', ')}` });
 
     try {
-        // condition 2: if data found in database, return it
-        console.log(`Fetching player summary for PUUID: ${puuid} and MatchID: ${matchid}`);
+        // condition 1: if data found in database, return it
+        console.log(`Fetching player analysis for PUUID: ${puuid} and MatchID: ${matchid}`);
         const data = await playerSummaryModel.findOne({ puuid:puuid, matchid:matchid });
         
         if (data) {
-            console.log(`Previous data found - returning saved data for PUUID: ${puuid} and MatchID: ${matchid}`);
+            console.log('Previous data found - returning saved data');
             return res.status(200).json(data.analysis);
         }
 
         // if no data found in database, fetch from Riot API and save to database
-        console.log(`No previous data found - generating new analysis`);
-
+        console.log('No previous data found - generating new analysis');
         try {
             const analysisData = await getGroqChatCompletion(process.env.GROQ_MESSAGE, puuid, matchid);
-            const analysis = analysisData.choices[0]?.message?.content || "";
+            const analysis = analysisData.choices[0]?.message?.content || '';
+            if (analysis !== '') {
+                const result = await playerSummaryModel.create({ puuid, matchid, analysis });
 
-            const result = await playerSummaryModel.create({ puuid, matchid, analysis });
-            console.log(`Player analysis saved successfully: ${result}`);
+                console.log('Player analysis generated and saved successfully');
+                return res.status(200).json(result.analysis);
+            }
+            else {
+                console.log('Analysis generation returned empty content');
 
-            return res.status(200).json(result);
+                return res.status(500).json({ error: '500: Analysis generation returned empty content' } );
+            }
         }
         catch (error: unknown) {
             const apiError = error as APIError;
-            const statusCode = apiError.status || 500;
-            const message = apiError.statusText || 'Internal Server Error';
+            const statusCode = apiError?.status || 500;
+            const message = apiError?.statusText || 'Internal Server Error';
             
             return res.status(statusCode).json({ error: `${statusCode}: ${message}` } );
         }
     }
     catch (error: unknown) {
         const apiError = error as APIError;
-        const statusCode = apiError.status || 500;
-        const message = apiError.statusText || 'Internal Server Error';
+        const statusCode = apiError?.status || 500;
+        const message = apiError?.statusText || 'Internal Server Error';
 
         return res.status(statusCode).json({ error: `${statusCode}: ${message}` } );
     }

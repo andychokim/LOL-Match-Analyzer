@@ -13,7 +13,14 @@ const mocks = {
     name: 'mockName',
     tag: 'mockTag',
     matchid: 'mockMatchID',
+    url: 'https://mockurl.com',
 }
+
+// Mock the config module to avoid exposing real API tokens in tests
+jest.mock('../../src/config', () => ({
+    HEADERS: {'X-Riot-Token': 'mockToken'},
+    REGION: 'americas',
+}));
 
 const mockError = new APIError(404, 'Not Found');
 
@@ -29,9 +36,59 @@ describe('Riot Service', () => {
         jest.clearAllMocks();
     })
 
-    describe('getPUUIDBySummonerNameAndTag', () => {
-        it('should return PUUID for valid summoner name and tag', async () => {
+    describe('sendRequest', () => {
 
+        it('should return a valid json for a valid global.fetch response', async () => {
+            (global.fetch as jest.Mock).mockResolvedValueOnce({
+                ok: true,
+                status: 200,
+                statusText: 'OK',
+                json: () => Promise.resolve({ data: 'mockData' }),
+            });
+
+            // const url = mocks.url;
+            const response = await getPUUIDBySummonerNameAndTag('mockName', 'mockTag');
+
+            expect(response).toEqual({ data: 'mockData' });
+            expect(global.fetch).toHaveBeenCalledTimes(1);
+            expect(global.fetch).toHaveBeenCalledWith(
+                expect.stringContaining('mockName/mockTag'),
+                expect.objectContaining({ headers: expect.any(Object) })
+            );
+        });
+
+        it('should throw a correct APIError when fetch fails', async () => {
+            (global.fetch as jest.Mock).mockResolvedValueOnce({
+                ok: false,
+                status: 404,
+                statusText: 'Not Found',
+            });
+
+            await expect(getPUUIDBySummonerNameAndTag(mocks.name, mocks.tag)).rejects.toStrictEqual(new APIError(404, 'Not Found'));
+            
+            expect(global.fetch).toHaveBeenCalledTimes(1);
+            expect(global.fetch).toHaveBeenCalledWith(
+                expect.stringContaining(`${mocks.name}/${mocks.tag}`),
+                expect.objectContaining({ headers: expect.any(Object) })
+            );
+        });
+
+        it('should throw a 500 APIError when an unknown error occurs', async () => {
+            (global.fetch as jest.Mock).mockRejectedValueOnce(new Error('Network Error'));
+
+            await expect(getPUUIDBySummonerNameAndTag(mocks.name, mocks.tag)).rejects.toStrictEqual(new APIError(500, 'Internal Server Error'));
+            
+            expect(global.fetch).toHaveBeenCalledTimes(1);
+            expect(global.fetch).toHaveBeenCalledWith(
+                expect.stringContaining(`${mocks.name}/${mocks.tag}`),
+                expect.objectContaining({ headers: expect.any(Object) })
+            );
+        });
+    });
+
+    describe('getPUUIDBySummonerNameAndTag', () => {
+
+        it('should return PUUID for valid summoner name and tag', async () => {
             (global.fetch as jest.Mock).mockResolvedValueOnce({
                 ok: true,
                 json: () => Promise.resolve(mocks.puuid),
@@ -45,12 +102,11 @@ describe('Riot Service', () => {
             // Check that fetch was called with a URL containing the summoner name and tag
             expect(global.fetch).toHaveBeenCalledWith(
                 expect.stringContaining(`${mocks.name}/${mocks.tag}`),
-                expect.any(Object)
+                expect.objectContaining({ headers: expect.any(Object) })
             );
         });
 
         it('should throw an error when it occurred', async () => {
-
             (global.fetch as jest.Mock).mockRejectedValue(mockError);
 
             await expect(getPUUIDBySummonerNameAndTag(mocks.name, mocks.tag)).rejects.toStrictEqual(mockError);
@@ -59,8 +115,8 @@ describe('Riot Service', () => {
     });
 
     describe('getRecentMatchesByPUUID', () => {
-        it('should return recent matches for valid PUUID', async () => {
 
+        it('should return recent matches for valid PUUID', async () => {
             (global.fetch as jest.Mock).mockResolvedValueOnce({
                 ok: true,
                 json: () => Promise.resolve(['match1', 'match2', 'match3']),
@@ -72,7 +128,7 @@ describe('Riot Service', () => {
             expect(global.fetch).toHaveBeenCalledTimes(1);
             expect(global.fetch).toHaveBeenCalledWith(
                 expect.stringContaining(mocks.puuid),
-                expect.any(Object)
+                expect.objectContaining({ headers: expect.any(Object) })
             );
         });
 
@@ -113,7 +169,7 @@ describe('Riot Service', () => {
             expect(global.fetch).toHaveBeenCalledTimes(1);
             expect(global.fetch).toHaveBeenCalledWith(
                 expect.stringContaining(mocks.matchid),
-                expect.any(Object)
+                expect.objectContaining({ headers: expect.any(Object) })
             );
         });
 
@@ -158,7 +214,7 @@ describe('Riot Service', () => {
             expect(global.fetch).toHaveBeenCalledTimes(1);
             expect(global.fetch).toHaveBeenCalledWith(
                 expect.stringContaining(mocks.matchid),
-                expect.any(Object)
+                expect.objectContaining({ headers: expect.any(Object) })
             );
         });
 

@@ -115,44 +115,4 @@ describe('Riot Routes', () => {
             expect(riotController.getPlayerSummaryController).toHaveBeenCalledTimes(1);
         });
     });
-
-    describe('POST /player-summary', () => {
-
-        it('should route to postPlayerSummaryHandler ', async () => {
-            const mockReq = {
-                puuid: mocks.puuid,
-                matchid: mocks.matchid,
-                analysis: {
-                    stats: mocks.stats,
-                    timeline: [mocks.timeline],
-                },
-            };
-
-            (riotController.postPlayerSummaryController as jest.Mock).mockImplementationOnce(async (_req, res) => {
-                res.status(200).json(mockReq);
-            });
-
-            const response = await request(app).post('/api/riot/player-summary');
-
-            expect(riotController.postPlayerSummaryController).toHaveBeenCalledTimes(1);
-            expect(response.status).toBe(200);
-            expect(response.body).toStrictEqual(mockReq);
-            expect(response.text).toContain(mocks.puuid);
-            expect(response.text).toContain(mocks.matchid);
-            expect(response.text).toContain(mocks.stats);
-            expect(response.text).toContain(mocks.timeline);
-        });
-
-        it('should handle errors in postPlayerSummaryHandler', async () => {
-            (riotController.postPlayerSummaryController as jest.Mock).mockImplementationOnce(async (_req, res) => {
-                res.status(500).json({ error: 'Internal server error' });
-            });
-
-            const response = await request(app).post('/api/riot/player-summary');
-
-            expect(riotController.postPlayerSummaryController).toHaveBeenCalledTimes(1);
-            expect(response.status).toBe(500);
-            expect(response.body).toEqual({ error: 'Internal server error' });
-        });
-    });
 });
