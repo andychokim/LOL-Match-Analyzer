@@ -1,26 +1,38 @@
 # Virtual environments
 node_modules/
 .env
+.env.local
+.env.*.local
 
 # Logs
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # IDE / Editor settings
 .vscode/
 .idea/
-
-# Node.js (for frontend)
-node_modules/
-npm-debug.log
-yarn-debug.log
-yarn-error.log
+*.swp
+*.swo
 
 # Frontend build output
+frontend/lol-analyzer/build/
+frontend/lol-analyzer/dist/
 frontend/build/
 frontend/dist/
 
 # Backend build output
 backend/dist/
+
+# React
+frontend/lol-analyzer/.env.local
+frontend/lol-analyzer/.env.development.local
+frontend/lol-analyzer/.env.test.local
+frontend/lol-analyzer/.env.production.local
+
+# Testing
+frontend/lol-analyzer/coverage/
 
 # OS files
 .DS_Store
