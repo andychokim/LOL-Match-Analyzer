@@ -30,7 +30,7 @@ const UserinfoForm = () => {
                 const errorData = await response.json();
                 
                 setError(errorData.error || 'Error fetching summoner information');
-                setEmptyFields(errorData.emptyFields || []);
+                setEmptyFields([]);
                 console.log('Error:', errorData.error);
                 return;
             }
@@ -43,7 +43,7 @@ const UserinfoForm = () => {
             setError(null);
             setEmptyFields([]);
         } catch (err) {
-            setError('Failed to connect to server. Make sure backend is running on port 3000.');
+            setError('Failed to connect to server. Make sure backend is running on port 5000.');
             console.error('Fetch error:', err);
         }
     }
