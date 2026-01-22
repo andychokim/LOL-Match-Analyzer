@@ -15,15 +15,15 @@ export async function getPUUIDController(req: Request, res: Response) {
     console.log(`Fetching PUUID for ${summonerName}#${tagLine}`);
 
     try {
-        const puuid = await getPUUIDBySummonerNameAndTag(summonerName, tagLine);
-        return res.status(200).json(puuid);
+        const data = await getPUUIDBySummonerNameAndTag(summonerName, tagLine);
+        res.status(200).json(data);
     }
     catch (error: unknown) {
         const apiError = error as APIError;
         const statusCode = apiError?.status || 500;
         const message = apiError?.statusText || 'Internal Server Error';
 
-        return res.status(statusCode).json({ error: `${statusCode}: ${message}` });
+        res.status(statusCode).json({ error: `${statusCode}: ${message}` });
     }
 };
 

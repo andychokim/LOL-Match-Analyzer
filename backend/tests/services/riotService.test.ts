@@ -148,7 +148,7 @@ describe('Riot Service', () => {
                 ok: true,
                 json: () => Promise.resolve({
                     metadata: {
-                        matchId: mocks.matchid,
+                        matchid: mocks.matchid,
                     },
                     info: {
                         mockInfo: 'mockInfoData',
@@ -160,7 +160,7 @@ describe('Riot Service', () => {
 
             expect(response).toEqual({
                 metadata: {
-                    matchId: mocks.matchid,
+                    matchid: mocks.matchid,
                 },
                 info: {
                     mockInfo: 'mockInfoData',
@@ -189,7 +189,7 @@ describe('Riot Service', () => {
                 ok: true,
                 json: () => Promise.resolve({
                     metadata: {
-                        matchId: mocks.matchid,
+                        matchid: mocks.matchid,
                     },
                     info: {
                         frames: [
@@ -203,7 +203,7 @@ describe('Riot Service', () => {
 
             expect(response).toEqual({
                 metadata: {
-                    matchId: mocks.matchid,
+                    matchid: mocks.matchid,
                 },
                 info: {
                     frames: [

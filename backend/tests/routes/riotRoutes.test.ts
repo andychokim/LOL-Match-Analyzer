@@ -80,7 +80,7 @@ describe('Riot Routes', () => {
         });
     });
 
-    describe('GET /player-summary/:puuid/:matchID', () => {
+    describe('GET /player-summary/:puuid/:matchid', () => {
 
         it('should route to getPlayerSummaryHandler ', async () => {
             (riotController.getPlayerSummaryController as jest.Mock).mockImplementationOnce(async (_req, res) => {

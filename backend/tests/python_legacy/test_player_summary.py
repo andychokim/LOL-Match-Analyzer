@@ -6,7 +6,7 @@ from unittest.mock import patch, Mock, ANY
 from src.analysis.player_summary import get_playerDetails, get_playerTimeline, get_playerSummary
 
 mock_puuid = "test-puuid"
-mock_matchId = "test-match-id"
+mock_matchid = "test-match-id"
 
 @pytest.mark.player_details
 class TestPlayerAnalysisStats:
@@ -77,7 +77,7 @@ class TestPlayerAnalysisStats:
             "challenge": {"challenge1": 100, "challenge2": 200}
         }
 
-        stats = get_playerDetails(mock_puuid, mock_matchId)
+        stats = get_playerDetails(mock_puuid, mock_matchid)
 
         assert stats == expected_stats
 
@@ -125,7 +125,7 @@ class TestPlayerAnalysisTimeData:
         }
         mock_matchTimeline.return_value = response
 
-        data = get_playerTimeline(mock_puuid, mock_matchId)
+        data = get_playerTimeline(mock_puuid, mock_matchid)
 
         # Expected: Only events with the conditions below:
         # type = CHAMPION_KILL and involves killerId, assistingParticipantIds or victimId of the player
@@ -172,7 +172,7 @@ class TestPlayerAnalysisPerformance:
         mock_matchStats.return_value = matchDetails_response
         mock_matchTimeData.return_value = matchTimeline_response
 
-        summary = get_playerSummary(mock_puuid, mock_matchId)
+        summary = get_playerSummary(mock_puuid, mock_matchid)
 
         assert summary == {
             "player_stats": matchDetails_response,

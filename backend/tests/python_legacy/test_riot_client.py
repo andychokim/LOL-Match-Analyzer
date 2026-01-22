@@ -121,23 +121,23 @@ class TestGetMatchDetails:
     Test suite for the get_matchDetails function.
     """
     def setup_method(self):
-        self.matchId = "matchid_1"
+        self.matchid = "matchid_1"
 
     # Test for successful match details retrieval
     @patch("src.riot_api.riot_client.requests.get")
     def test_get_matchDetails(self, mock_get):
         response = {
-            "metadata": {"dataVersion": "1", "matchId": "matchid_1", "participants": []},
+            "metadata": {"dataVersion": "1", "matchid": "matchid_1", "participants": []},
             "info": {"gameId": 123456789}
         }
         mock_get.return_value.status_code = 200
         mock_get.return_value.json.return_value = response
 
-        match_details = get_matchDetails(self.matchId)
+        match_details = get_matchDetails(self.matchid)
 
         assert match_details == response # Expected match details from mock response
 
-        expected_url = f"https://americas.api.riotgames.com/lol/match/v5/matches/{self.matchId}"
+        expected_url = f"https://americas.api.riotgames.com/lol/match/v5/matches/{self.matchid}"
         mock_get.assert_called_once_with(expected_url, headers={"X-Riot-Token": ANY})
 
     # Test for get_match_details error handling 
@@ -164,7 +164,7 @@ class TestGetMatchDetails:
         mock_get.return_value = mock_response
 
         with pytest.raises(RiotAPIError) as exc_info:
-            get_matchDetails(self.matchId)
+            get_matchDetails(self.matchid)
         
         assert str(exc_info.value) == f"API request failed: {status_code} - {error_message}"
         mock_get.assert_called_once()
@@ -175,23 +175,23 @@ class TestGetMatchTimeline:
     Test suite for the get_matchTimeline function.
     """
     def setup_method(self):
-        self.matchId = "matchid_1"
+        self.matchid = "matchid_1"
 
     # Test for successful match details retrieval
     @patch("src.riot_api.riot_client.requests.get")
     def test_get_matchTimeLine(self, mock_get):
         response = {
-            "metadata": {"dataVersion": "1", "matchId": "matchid_1", "participants": []},
+            "metadata": {"dataVersion": "1", "matchid": "matchid_1", "participants": []},
             "info": {"gameId": 123456789}
         }
         mock_get.return_value.status_code = 200
         mock_get.return_value.json.return_value = response
 
-        match_timeline = get_matchTimeline(self.matchId)
+        match_timeline = get_matchTimeline(self.matchid)
 
         assert match_timeline == response # Expected match details from mock response
 
-        expected_url = f"https://americas.api.riotgames.com/lol/match/v5/matches/{self.matchId}/timeline"
+        expected_url = f"https://americas.api.riotgames.com/lol/match/v5/matches/{self.matchid}/timeline"
         mock_get.assert_called_once_with(expected_url, headers={"X-Riot-Token": ANY})
 
     # Test for get_match_details error handling 
@@ -218,7 +218,7 @@ class TestGetMatchTimeline:
         mock_get.return_value = mock_response
 
         with pytest.raises(RiotAPIError) as exc_info:
-            get_matchTimeline(self.matchId)
+            get_matchTimeline(self.matchid)
         
         assert str(exc_info.value) == f"API request failed: {status_code} - {error_message}"
         mock_get.assert_called_once()

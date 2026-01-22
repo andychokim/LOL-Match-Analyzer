@@ -4,12 +4,15 @@ import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { AnalysisContextProvider } from './contexts/AnalysisContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <App />
+      <AnalysisContextProvider>
+        <App />
+      </AnalysisContextProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

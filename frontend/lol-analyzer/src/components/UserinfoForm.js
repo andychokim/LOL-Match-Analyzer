@@ -1,10 +1,14 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAnalysisContext } from '../hooks/useAnalysisContext';
 
 const UserinfoForm = () => {
     const [summonerName, setSummonerName] = useState('');
     const [tagline, setTagline] = useState('');
     const [error, setError] = useState(null);
     const [emptyFields, setEmptyFields] = useState([]);
+    const { dispatch } = useAnalysisContext();
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -21,27 +25,26 @@ const UserinfoForm = () => {
         }
 
         try {
-            const response = await fetch(`/api/riot/summoner/${summonerName}/${tagline}`, {
-                method: 'GET'
-            });
-            console.log(response);
+            const response = await fetch(`/api/riot/summoner/${summonerName}/${tagline}`);
 
             if (!response.ok) {
                 const errorData = await response.json();
                 
                 setError(errorData.error || 'Error fetching summoner information');
                 setEmptyFields([]);
-                console.log('Error:', errorData.error);
+                console.log('Full response:', response.status, errorData);
                 return;
             }
 
-            const puuid = await response.json();
+            const { puuid } = await response.json();
             console.log('Fetched summoner information successfully:', puuid);
+            dispatch({ type: 'SET_PUUID', payload: puuid });
 
             setSummonerName('');
             setTagline('');
             setError(null);
             setEmptyFields([]);
+            navigate('/match-selection');
         } catch (err) {
             setError('Failed to connect to server. Make sure backend is running on port 5000.');
             console.error('Fetch error:', err);

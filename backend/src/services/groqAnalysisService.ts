@@ -1,11 +1,11 @@
 import Groq from 'groq-sdk';
 import { getPlayerSummary } from './playerSummaryService';
 
-export async function getGroqChatCompletion(message: string | undefined, puuid: string, matchId: string) {
+export async function getGroqChatCompletion(message: string | undefined, puuid: string, matchid: string) {
     
     try {
         const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
-        const playerSummary = await getPlayerSummary(puuid, matchId);
+        const playerSummary = await getPlayerSummary(puuid, matchid);
 
         return groq.chat.completions.create({
             model: 'llama-3.1-8b-instant', 
