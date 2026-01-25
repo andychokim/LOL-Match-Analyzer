@@ -13,6 +13,9 @@ router.get('/summoner/:summonerName/:tagLine', riotController.getPUUIDController
 // GET recent matches by PUUID
 router.get('/matches/:puuid', riotController.getRecentMatchesController);
 
+// GET match details by match ID
+router.get('/match/:matchid', riotController.getMatchDetailsController);
+
 // GET player summary by PUUID and match ID
 router.get('/player-summary/:puuid/:matchid', riotController.getPlayerSummaryController);
 

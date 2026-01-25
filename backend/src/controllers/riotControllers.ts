@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getPUUIDBySummonerNameAndTag, getRecentMatchesByPUUID } from '../services/riotService';
+import { getMatchDetailsByMatchID, getPUUIDBySummonerNameAndTag, getRecentMatchesByPUUID } from '../services/riotService';
 import { getGroqChatCompletion } from '../services/groqAnalysisService';
 import { playerSummaryModel } from '../models/playerSummaryModel'; // playerSummary model for post operation
 import { APIError } from '../errors/APIError';
@@ -48,6 +48,28 @@ export async function getRecentMatchesController(req: Request, res: Response) {
         return res.status(statusCode).json({ error: `${statusCode}: ${message}` });
     }
 };
+
+/**
+ * Get match details by match ID
+ * @param req params: matchid
+ * @param res json formatted match details for successful request, status code and error message for failed request
+ */
+export async function getMatchDetailsController(req: Request, res: Response) {
+    const { matchid } = req.params;
+    console.log(`Fetching match details for Match ID: ${matchid}`);
+
+    try {
+        const matchDetails = await getMatchDetailsByMatchID(matchid);
+        return res.status(200).json(matchDetails);
+    }
+    catch (error: unknown) {
+        const apiError = error as APIError;
+        const statusCode = apiError?.status || 500;
+        const message = apiError?.statusText || 'Internal Server Error';
+
+        return res.status(statusCode).json({ error: `${statusCode}: ${message}` });
+    }
+}
 
 /**
  * Get a player summary by PUUID and match ID

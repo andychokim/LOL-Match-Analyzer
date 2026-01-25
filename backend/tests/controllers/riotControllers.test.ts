@@ -1,8 +1,9 @@
-import { getPUUIDBySummonerNameAndTag, getRecentMatchesByPUUID } from '../../src/services/riotService';
+import { getMatchDetailsByMatchID, getPUUIDBySummonerNameAndTag, getRecentMatchesByPUUID } from '../../src/services/riotService';
 import { getGroqChatCompletion } from '../../src/services/groqAnalysisService';
 import {
     getPUUIDController,
     getRecentMatchesController,
+    getMatchDetailsController,
     getPlayerSummaryController,
 } from '../../src/controllers/riotControllers';
 import { playerSummaryModel } from '../../src/models/playerSummaryModel';
@@ -131,6 +132,56 @@ describe('Riot Controllers', () => {
 
             expect(getRecentMatchesByPUUID).toHaveBeenCalledTimes(1);
             expect(getRecentMatchesByPUUID).toHaveBeenCalledWith(mocks.puuid);
+
+            expect(mockRes.status).toHaveBeenCalledTimes(1);
+            expect(mockRes.status).toHaveBeenCalledWith(500);
+            expect(mockRes.json).toHaveBeenCalledTimes(1);
+            expect(mockRes.json).toHaveBeenCalledWith({ error: `500: Internal Server Error` });
+        });
+    });
+
+    describe('getMatchDetailsController', () => {
+        const mockReq = {
+            params: {
+                matchid: mocks.matchid,
+            }
+        };
+
+        it('should include a valid match details in response for valid request', async () => {
+            (getMatchDetailsByMatchID as jest.Mock).mockResolvedValueOnce({ matchid: mocks.matchid });
+
+            await getMatchDetailsController(mockReq as any, mockRes as any);
+
+            expect(getMatchDetailsByMatchID).toHaveBeenCalledTimes(1);
+            expect(getMatchDetailsByMatchID).toHaveBeenCalledWith(mocks.matchid);
+
+            expect(mockRes.status).toHaveBeenCalledTimes(1);
+            expect(mockRes.status).toHaveBeenCalledWith(200);
+            expect(mockRes.json).toHaveBeenCalledTimes(1);
+            expect(mockRes.json).toHaveBeenCalledWith({ matchid: mocks.matchid });
+        });
+
+        it('should include a correct error status and message in response when an error occurs', async () => {
+            (getMatchDetailsByMatchID as jest.Mock).mockRejectedValueOnce(mockError);
+
+            await getMatchDetailsController(mockReq as any, mockRes as any);
+
+            expect(getMatchDetailsByMatchID).toHaveBeenCalledTimes(1);
+            expect(getMatchDetailsByMatchID).toHaveBeenCalledWith(mocks.matchid);
+
+            expect(mockRes.status).toHaveBeenCalledTimes(1);
+            expect(mockRes.status).toHaveBeenCalledWith(mockError.status);
+            expect(mockRes.json).toHaveBeenCalledTimes(1);
+            expect(mockRes.json).toHaveBeenCalledWith({ error: `${mockError.status}: ${mockError.statusText}` });
+        });
+
+        it('should handle undefined errors with 500 status code', async () => {
+            (getMatchDetailsByMatchID as jest.Mock).mockRejectedValueOnce(undefined);
+
+            await getMatchDetailsController(mockReq as any, mockRes as any);
+
+            expect(getMatchDetailsByMatchID).toHaveBeenCalledTimes(1);
+            expect(getMatchDetailsByMatchID).toHaveBeenCalledWith(mocks.matchid);
 
             expect(mockRes.status).toHaveBeenCalledTimes(1);
             expect(mockRes.status).toHaveBeenCalledWith(500);

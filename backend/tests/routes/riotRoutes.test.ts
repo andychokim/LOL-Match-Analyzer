@@ -80,6 +80,34 @@ describe('Riot Routes', () => {
         });
     });
 
+    describe('GET /match/:matchid', () => {
+
+        it('should route to getMatchDetailsHandler ', async () => {
+            (riotController.getMatchDetailsController as jest.Mock).mockImplementationOnce(async (_req, res) => {
+                res.status(200).json({ matchid: mocks.matchid });
+            });
+
+            const response = await request(app).get(`/api/riot/match/${mocks.matchid}`);
+
+            expect(response.status).toBe(200);
+            expect(response.body).toStrictEqual({ matchid: mocks.matchid });
+            expect(response.text).toContain(mocks.matchid);
+            expect(riotController.getMatchDetailsController).toHaveBeenCalledTimes(1);
+        });
+
+        it('should handle errors in getMatchDetailsHandler', async () => {
+            (riotController.getMatchDetailsController as jest.Mock).mockImplementationOnce(async (_req, res) => {
+                res.status(500).json({ error: 'Internal server error' });
+            });
+
+            const response = await request(app).get(`/api/riot/match/${mocks.matchid}`);
+            
+            expect(response.status).toBe(500);
+            expect(response.body).toEqual({ error: 'Internal server error' });
+            expect(riotController.getMatchDetailsController).toHaveBeenCalledTimes(1);
+        });
+    });
+
     describe('GET /player-summary/:puuid/:matchid', () => {
 
         it('should route to getPlayerSummaryHandler ', async () => {

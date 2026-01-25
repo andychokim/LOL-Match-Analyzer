@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1768528191497" clover="3.2.0">
-  <project timestamp="1768528191497" name="All files">
-    <metrics statements="175" coveredstatements="172" conditionals="67" coveredconditionals="62" methods="13" coveredmethods="13" elements="255" coveredelements="247" complexity="0" loc="175" ncloc="175" packages="6" files="8" classes="8"/>
+<coverage generated="1769305440005" clover="3.2.0">
+  <project timestamp="1769305440005" name="All files">
+    <metrics statements="186" coveredstatements="183" conditionals="71" coveredconditionals="66" methods="14" coveredmethods="14" elements="271" coveredelements="263" complexity="0" loc="186" ncloc="186" packages="6" files="8" classes="8"/>
     <package name="src">
       <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
       <file name="config.ts" path="C:\Users\andyc\Documents\_Personal\projects\LOL-Match-Analyzer\backend\src\config.ts">
@@ -16,9 +16,9 @@
       </file>
     </package>
     <package name="src.controllers">
-      <metrics statements="49" coveredstatements="49" conditionals="22" coveredconditionals="22" methods="3" coveredmethods="3"/>
+      <metrics statements="59" coveredstatements="59" conditionals="26" coveredconditionals="26" methods="4" coveredmethods="4"/>
       <file name="riotControllers.ts" path="C:\Users\andyc\Documents\_Personal\projects\LOL-Match-Analyzer\backend\src\controllers\riotControllers.ts">
-        <metrics statements="49" coveredstatements="49" conditionals="22" coveredconditionals="22" methods="3" coveredmethods="3"/>
+        <metrics statements="59" coveredstatements="59" conditionals="26" coveredconditionals="26" methods="4" coveredmethods="4"/>
         <line num="2" count="2" type="stmt"/>
         <line num="3" count="2" type="stmt"/>
         <line num="4" count="2" type="stmt"/>
@@ -42,32 +42,42 @@
         <line num="45" count="2" type="cond" truecount="2" falsecount="0"/>
         <line num="46" count="2" type="cond" truecount="2" falsecount="0"/>
         <line num="48" count="2" type="stmt"/>
-        <line num="58" count="2" type="stmt"/>
-        <line num="59" count="7" type="stmt"/>
-        <line num="67" count="7" type="stmt"/>
-        <line num="69" count="7" type="stmt"/>
-        <line num="70" count="7" type="stmt"/>
-        <line num="72" count="5" type="cond" truecount="2" falsecount="0"/>
-        <line num="73" count="1" type="stmt"/>
-        <line num="74" count="1" type="stmt"/>
-        <line num="78" count="4" type="stmt"/>
-        <line num="79" count="4" type="stmt"/>
-        <line num="80" count="4" type="stmt"/>
-        <line num="81" count="2" type="cond" truecount="2" falsecount="0"/>
-        <line num="82" count="2" type="cond" truecount="2" falsecount="0"/>
-        <line num="83" count="1" type="stmt"/>
-        <line num="85" count="1" type="stmt"/>
-        <line num="86" count="1" type="stmt"/>
-        <line num="89" count="1" type="stmt"/>
-        <line num="91" count="1" type="stmt"/>
-        <line num="95" count="2" type="stmt"/>
-        <line num="96" count="2" type="cond" truecount="2" falsecount="0"/>
-        <line num="97" count="2" type="cond" truecount="2" falsecount="0"/>
-        <line num="99" count="2" type="stmt"/>
-        <line num="103" count="2" type="stmt"/>
+        <line num="57" count="2" type="stmt"/>
+        <line num="58" count="3" type="stmt"/>
+        <line num="59" count="3" type="stmt"/>
+        <line num="61" count="3" type="stmt"/>
+        <line num="62" count="3" type="stmt"/>
+        <line num="63" count="1" type="stmt"/>
+        <line num="66" count="2" type="stmt"/>
+        <line num="67" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="68" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="70" count="2" type="stmt"/>
+        <line num="80" count="2" type="stmt"/>
+        <line num="81" count="7" type="stmt"/>
+        <line num="89" count="7" type="stmt"/>
+        <line num="91" count="7" type="stmt"/>
+        <line num="92" count="7" type="stmt"/>
+        <line num="94" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="95" count="1" type="stmt"/>
+        <line num="96" count="1" type="stmt"/>
+        <line num="100" count="4" type="stmt"/>
+        <line num="101" count="4" type="stmt"/>
+        <line num="102" count="4" type="stmt"/>
+        <line num="103" count="2" type="cond" truecount="2" falsecount="0"/>
         <line num="104" count="2" type="cond" truecount="2" falsecount="0"/>
-        <line num="105" count="2" type="cond" truecount="2" falsecount="0"/>
-        <line num="107" count="2" type="stmt"/>
+        <line num="105" count="1" type="stmt"/>
+        <line num="107" count="1" type="stmt"/>
+        <line num="108" count="1" type="stmt"/>
+        <line num="111" count="1" type="stmt"/>
+        <line num="113" count="1" type="stmt"/>
+        <line num="117" count="2" type="stmt"/>
+        <line num="118" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="119" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="121" count="2" type="stmt"/>
+        <line num="125" count="2" type="stmt"/>
+        <line num="126" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="127" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="129" count="2" type="stmt"/>
       </file>
     </package>
     <package name="src.errors">
@@ -90,9 +100,9 @@
       </file>
     </package>
     <package name="src.routes">
-      <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <metrics statements="8" coveredstatements="8" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
       <file name="riotRoutes.ts" path="C:\Users\andyc\Documents\_Personal\projects\LOL-Match-Analyzer\backend\src\routes\riotRoutes.ts">
-        <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <metrics statements="8" coveredstatements="8" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
         <line num="4" count="1" type="stmt"/>
@@ -100,6 +110,7 @@
         <line num="14" count="1" type="stmt"/>
         <line num="17" count="1" type="stmt"/>
         <line num="20" count="1" type="stmt"/>
+        <line num="23" count="1" type="stmt"/>
       </file>
     </package>
     <package name="src.services">
