@@ -12,7 +12,7 @@ const mocks = {
     puuid: 'mockID',
     name: 'mockName',
     tag: 'mockTag',
-    matchid: 'mockMatchID',
+    matchId: 'mockMatchID',
     url: 'https://mockurl.com',
 }
 
@@ -148,7 +148,7 @@ describe('Riot Service', () => {
                 ok: true,
                 json: () => Promise.resolve({
                     metadata: {
-                        matchid: mocks.matchid,
+                        matchId: mocks.matchId,
                     },
                     info: {
                         mockInfo: 'mockInfoData',
@@ -156,11 +156,11 @@ describe('Riot Service', () => {
                 }),
             });
 
-            const response = await getMatchDetailsByMatchID(mocks.matchid);
+            const response = await getMatchDetailsByMatchID(mocks.matchId);
 
             expect(response).toEqual({
                 metadata: {
-                    matchid: mocks.matchid,
+                    matchId: mocks.matchId,
                 },
                 info: {
                     mockInfo: 'mockInfoData',
@@ -168,7 +168,7 @@ describe('Riot Service', () => {
             });
             expect(global.fetch).toHaveBeenCalledTimes(1);
             expect(global.fetch).toHaveBeenCalledWith(
-                expect.stringContaining(mocks.matchid),
+                expect.stringContaining(mocks.matchId),
                 expect.objectContaining({ headers: expect.any(Object) })
             );
         });
@@ -189,7 +189,7 @@ describe('Riot Service', () => {
                 ok: true,
                 json: () => Promise.resolve({
                     metadata: {
-                        matchid: mocks.matchid,
+                        matchId: mocks.matchId,
                     },
                     info: {
                         frames: [
@@ -199,11 +199,11 @@ describe('Riot Service', () => {
                 }),
             });
 
-            const response = await getMatchTimelineByMatchID(mocks.matchid);
+            const response = await getMatchTimelineByMatchID(mocks.matchId);
 
             expect(response).toEqual({
                 metadata: {
-                    matchid: mocks.matchid,
+                    matchId: mocks.matchId,
                 },
                 info: {
                     frames: [
@@ -213,7 +213,7 @@ describe('Riot Service', () => {
             });
             expect(global.fetch).toHaveBeenCalledTimes(1);
             expect(global.fetch).toHaveBeenCalledWith(
-                expect.stringContaining(mocks.matchid),
+                expect.stringContaining(mocks.matchId),
                 expect.objectContaining({ headers: expect.any(Object) })
             );
         });

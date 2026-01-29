@@ -125,10 +125,10 @@ router.get('/summoner/:summonerName/:tagLine', riotController.getPUUIDController
 router.get('/matches/:puuid', riotController.getRecentMatchesController);
 &nbsp;
 // GET match details by match ID
-router.get('/match/:matchid', riotController.getMatchDetailsController);
+router.get('/match/:matchId', riotController.getMatchDetailsController);
 &nbsp;
 // GET player summary by PUUID and match ID
-router.get('/player-summary/:puuid/:matchid', riotController.getPlayerSummaryController);
+router.get('/player-summary/:puuid/:matchId', riotController.getPlayerSummaryController);
 &nbsp;
 &nbsp;
 export default router;

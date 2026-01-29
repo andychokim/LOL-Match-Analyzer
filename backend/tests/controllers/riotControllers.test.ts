@@ -19,7 +19,7 @@ const mocks = {
     puuid: 'mockID',
     name: 'mockName',
     tag: 'mockTag',
-    matchid: 'mockMatchID',
+    matchId: 'mockMatchID',
     analysis: 'mockAnalysis',
 };
 
@@ -96,8 +96,8 @@ describe('Riot Controllers', () => {
             }
         };
 
-        it('should include a valid matchids in response for valid request', async () => {
-            (getRecentMatchesByPUUID as jest.Mock).mockResolvedValueOnce([mocks.matchid]);
+        it('should include a valid matchIds in response for valid request', async () => {
+            (getRecentMatchesByPUUID as jest.Mock).mockResolvedValueOnce([mocks.matchId]);
 
             await getRecentMatchesController(mockReq as any, mockRes as any);
 
@@ -108,7 +108,7 @@ describe('Riot Controllers', () => {
             expect(mockRes.status).toHaveBeenCalledTimes(1);
             expect(mockRes.status).toHaveBeenCalledWith(200);
             expect(mockRes.json).toHaveBeenCalledTimes(1);
-            expect(mockRes.json).toHaveBeenCalledWith([mocks.matchid]);
+            expect(mockRes.json).toHaveBeenCalledWith([mocks.matchId]);
         });
 
         it('should include a correct error status and message in response when an error occurs', async () => {
@@ -143,22 +143,22 @@ describe('Riot Controllers', () => {
     describe('getMatchDetailsController', () => {
         const mockReq = {
             params: {
-                matchid: mocks.matchid,
+                matchId: mocks.matchId,
             }
         };
 
         it('should include a valid match details in response for valid request', async () => {
-            (getMatchDetailsByMatchID as jest.Mock).mockResolvedValueOnce({ matchid: mocks.matchid });
+            (getMatchDetailsByMatchID as jest.Mock).mockResolvedValueOnce({ matchId: mocks.matchId });
 
             await getMatchDetailsController(mockReq as any, mockRes as any);
 
             expect(getMatchDetailsByMatchID).toHaveBeenCalledTimes(1);
-            expect(getMatchDetailsByMatchID).toHaveBeenCalledWith(mocks.matchid);
+            expect(getMatchDetailsByMatchID).toHaveBeenCalledWith(mocks.matchId);
 
             expect(mockRes.status).toHaveBeenCalledTimes(1);
             expect(mockRes.status).toHaveBeenCalledWith(200);
             expect(mockRes.json).toHaveBeenCalledTimes(1);
-            expect(mockRes.json).toHaveBeenCalledWith({ matchid: mocks.matchid });
+            expect(mockRes.json).toHaveBeenCalledWith({ matchId: mocks.matchId });
         });
 
         it('should include a correct error status and message in response when an error occurs', async () => {
@@ -167,7 +167,7 @@ describe('Riot Controllers', () => {
             await getMatchDetailsController(mockReq as any, mockRes as any);
 
             expect(getMatchDetailsByMatchID).toHaveBeenCalledTimes(1);
-            expect(getMatchDetailsByMatchID).toHaveBeenCalledWith(mocks.matchid);
+            expect(getMatchDetailsByMatchID).toHaveBeenCalledWith(mocks.matchId);
 
             expect(mockRes.status).toHaveBeenCalledTimes(1);
             expect(mockRes.status).toHaveBeenCalledWith(mockError.status);
@@ -181,7 +181,7 @@ describe('Riot Controllers', () => {
             await getMatchDetailsController(mockReq as any, mockRes as any);
 
             expect(getMatchDetailsByMatchID).toHaveBeenCalledTimes(1);
-            expect(getMatchDetailsByMatchID).toHaveBeenCalledWith(mocks.matchid);
+            expect(getMatchDetailsByMatchID).toHaveBeenCalledWith(mocks.matchId);
 
             expect(mockRes.status).toHaveBeenCalledTimes(1);
             expect(mockRes.status).toHaveBeenCalledWith(500);
@@ -194,23 +194,23 @@ describe('Riot Controllers', () => {
         const mockReq = {
             params: {
                 puuid: mocks.puuid,
-                matchid: mocks.matchid,
+                matchId: mocks.matchId,
             }
         };
 
         it('should generate a valid player analysis for a valid, nonredundant request', async () => {
             (playerSummaryModel.findOne as jest.Mock).mockResolvedValueOnce(null); // no previous data
             (getGroqChatCompletion as jest.Mock).mockResolvedValueOnce({ choices: [{ message: { content: mocks.analysis } }] });
-            (playerSummaryModel.create as jest.Mock).mockResolvedValueOnce({ puuid: mocks.puuid, matchid: mocks.matchid, analysis: mocks.analysis });
+            (playerSummaryModel.create as jest.Mock).mockResolvedValueOnce({ puuid: mocks.puuid, matchId: mocks.matchId, analysis: mocks.analysis });
 
             await getPlayerSummaryController(mockReq as any, mockRes as any);
 
             expect(playerSummaryModel.findOne).toHaveBeenCalledTimes(1);
-            expect(playerSummaryModel.findOne).toHaveBeenCalledWith({ puuid: mocks.puuid, matchid: mocks.matchid });
+            expect(playerSummaryModel.findOne).toHaveBeenCalledWith({ puuid: mocks.puuid, matchId: mocks.matchId });
             expect(getGroqChatCompletion).toHaveBeenCalledTimes(1);
-            expect(getGroqChatCompletion).toHaveBeenCalledWith(process.env.GROQ_MESSAGE, mocks.puuid, mocks.matchid);
+            expect(getGroqChatCompletion).toHaveBeenCalledWith(process.env.GROQ_MESSAGE, mocks.puuid, mocks.matchId);
             expect(playerSummaryModel.create).toHaveBeenCalledTimes(1);
-            expect(playerSummaryModel.create).toHaveBeenCalledWith({ puuid: mocks.puuid, matchid: mocks.matchid, analysis: mocks.analysis });
+            expect(playerSummaryModel.create).toHaveBeenCalledWith({ puuid: mocks.puuid, matchId: mocks.matchId, analysis: mocks.analysis });
 
             expect(mockRes.status).toHaveBeenCalledTimes(1);
             expect(mockRes.status).toHaveBeenCalledWith(200);
@@ -219,12 +219,12 @@ describe('Riot Controllers', () => {
         });
 
         it('should return a premade analysis for a valid, redundant request', async () => {
-            (playerSummaryModel.findOne as jest.Mock).mockResolvedValueOnce({ puuid: mocks.puuid, matchid: mocks.matchid, analysis: mocks.analysis });
+            (playerSummaryModel.findOne as jest.Mock).mockResolvedValueOnce({ puuid: mocks.puuid, matchId: mocks.matchId, analysis: mocks.analysis });
 
             await getPlayerSummaryController(mockReq as any, mockRes as any);
 
             expect(playerSummaryModel.findOne).toHaveBeenCalledTimes(1);
-            expect(playerSummaryModel.findOne).toHaveBeenCalledWith({ puuid: mocks.puuid, matchid: mocks.matchid });
+            expect(playerSummaryModel.findOne).toHaveBeenCalledWith({ puuid: mocks.puuid, matchId: mocks.matchId });
             expect(getGroqChatCompletion).not.toHaveBeenCalled();
             expect(playerSummaryModel.create).not.toHaveBeenCalled();
 
@@ -240,7 +240,7 @@ describe('Riot Controllers', () => {
             await getPlayerSummaryController(mockReq as any, mockRes as any);
 
             expect(playerSummaryModel.findOne).toHaveBeenCalledTimes(1);
-            expect(playerSummaryModel.findOne).toHaveBeenCalledWith({ puuid: mocks.puuid, matchid: mocks.matchid });
+            expect(playerSummaryModel.findOne).toHaveBeenCalledWith({ puuid: mocks.puuid, matchId: mocks.matchId });
             expect(getGroqChatCompletion).not.toHaveBeenCalled();
             expect(playerSummaryModel.create).not.toHaveBeenCalled();
 
@@ -256,7 +256,7 @@ describe('Riot Controllers', () => {
             await getPlayerSummaryController(mockReq as any, mockRes as any);
 
             expect(playerSummaryModel.findOne).toHaveBeenCalledTimes(1);
-            expect(playerSummaryModel.findOne).toHaveBeenCalledWith({ puuid: mocks.puuid, matchid: mocks.matchid });
+            expect(playerSummaryModel.findOne).toHaveBeenCalledWith({ puuid: mocks.puuid, matchId: mocks.matchId });
             expect(getGroqChatCompletion).not.toHaveBeenCalled();
             expect(playerSummaryModel.create).not.toHaveBeenCalled();
 
@@ -273,9 +273,9 @@ describe('Riot Controllers', () => {
             await getPlayerSummaryController(mockReq as any, mockRes as any);
 
             expect(playerSummaryModel.findOne).toHaveBeenCalledTimes(1);
-            expect(playerSummaryModel.findOne).toHaveBeenCalledWith({ puuid: mocks.puuid, matchid: mocks.matchid });
+            expect(playerSummaryModel.findOne).toHaveBeenCalledWith({ puuid: mocks.puuid, matchId: mocks.matchId });
             expect(getGroqChatCompletion).toHaveBeenCalledTimes(1);
-            expect(getGroqChatCompletion).toHaveBeenCalledWith(process.env.GROQ_MESSAGE, mocks.puuid, mocks.matchid);
+            expect(getGroqChatCompletion).toHaveBeenCalledWith(process.env.GROQ_MESSAGE, mocks.puuid, mocks.matchId);
             expect(playerSummaryModel.create).not.toHaveBeenCalled();
 
             expect(mockRes.status).toHaveBeenCalledTimes(1);
@@ -291,9 +291,9 @@ describe('Riot Controllers', () => {
             await getPlayerSummaryController(mockReq as any, mockRes as any);
 
             expect(playerSummaryModel.findOne).toHaveBeenCalledTimes(1);
-            expect(playerSummaryModel.findOne).toHaveBeenCalledWith({ puuid: mocks.puuid, matchid: mocks.matchid });
+            expect(playerSummaryModel.findOne).toHaveBeenCalledWith({ puuid: mocks.puuid, matchId: mocks.matchId });
             expect(getGroqChatCompletion).toHaveBeenCalledTimes(1);
-            expect(getGroqChatCompletion).toHaveBeenCalledWith(process.env.GROQ_MESSAGE, mocks.puuid, mocks.matchid);
+            expect(getGroqChatCompletion).toHaveBeenCalledWith(process.env.GROQ_MESSAGE, mocks.puuid, mocks.matchId);
             expect(playerSummaryModel.create).not.toHaveBeenCalled();
 
             expect(mockRes.status).toHaveBeenCalledTimes(1);
@@ -309,9 +309,9 @@ describe('Riot Controllers', () => {
             await getPlayerSummaryController(mockReq as any, mockRes as any);
 
             expect(playerSummaryModel.findOne).toHaveBeenCalledTimes(1);
-            expect(playerSummaryModel.findOne).toHaveBeenCalledWith({ puuid: mocks.puuid, matchid: mocks.matchid });
+            expect(playerSummaryModel.findOne).toHaveBeenCalledWith({ puuid: mocks.puuid, matchId: mocks.matchId });
             expect(getGroqChatCompletion).toHaveBeenCalledTimes(1);
-            expect(getGroqChatCompletion).toHaveBeenCalledWith(process.env.GROQ_MESSAGE, mocks.puuid, mocks.matchid);
+            expect(getGroqChatCompletion).toHaveBeenCalledWith(process.env.GROQ_MESSAGE, mocks.puuid, mocks.matchId);
             expect(playerSummaryModel.create).not.toHaveBeenCalled();
 
             expect(mockRes.status).toHaveBeenCalledTimes(1);

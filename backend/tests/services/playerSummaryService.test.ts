@@ -6,7 +6,7 @@ jest.mock('../../src/services/riotService');
 
 const mocks = {
     puuid: 'mockPUUID',
-    matchid: 'mockMatchID',
+    matchId: 'mockMatchID',
 };
 
 const mockMatchDetails = {
@@ -162,7 +162,7 @@ describe('Player Summary Service', () => {
             (riotService.getMatchDetailsByMatchID as jest.Mock).mockResolvedValueOnce(mockMatchDetails);
             (riotService.getMatchTimelineByMatchID as jest.Mock).mockResolvedValueOnce(mockMatchTimeline);
 
-            const result = await getPlayerSummary(mocks.puuid, mocks.matchid);
+            const result = await getPlayerSummary(mocks.puuid, mocks.matchId);
 
             expect(result).not.toBeNull();
             expect(result?.player_stats).toBeDefined();
@@ -203,7 +203,7 @@ describe('Player Summary Service', () => {
             );
             (riotService.getMatchTimelineByMatchID as jest.Mock).mockResolvedValueOnce(mockMatchTimeline);
 
-            const result = await getPlayerSummary(mocks.puuid, mocks.matchid);
+            const result = await getPlayerSummary(mocks.puuid, mocks.matchId);
 
             expect(result).toBeNull();
         });
@@ -212,7 +212,7 @@ describe('Player Summary Service', () => {
             (riotService.getMatchDetailsByMatchID as jest.Mock).mockResolvedValueOnce(null);
             (riotService.getMatchTimelineByMatchID as jest.Mock).mockResolvedValueOnce(mockMatchTimeline);
 
-            const result = await getPlayerSummary(mocks.puuid, mocks.matchid);
+            const result = await getPlayerSummary(mocks.puuid, mocks.matchId);
 
             expect(result).toBeNull();
         });
@@ -251,7 +251,7 @@ describe('Player Summary Service', () => {
             (riotService.getMatchDetailsByMatchID as jest.Mock).mockResolvedValueOnce(mockMatchDetails);
             (riotService.getMatchTimelineByMatchID as jest.Mock).mockResolvedValueOnce(emptyTimelineData);
 
-            const result = await getPlayerSummary(mocks.puuid, mocks.matchid);
+            const result = await getPlayerSummary(mocks.puuid, mocks.matchId);
 
             expect(result?.player_timeline).toEqual([]);
         });
@@ -262,7 +262,7 @@ describe('Player Summary Service', () => {
             (riotService.getMatchDetailsByMatchID as jest.Mock).mockResolvedValueOnce(mockMatchDetails);
             (riotService.getMatchTimelineByMatchID as jest.Mock).mockResolvedValueOnce(timelineWithoutInfo);
 
-            const result = await getPlayerSummary(mocks.puuid, mocks.matchid);
+            const result = await getPlayerSummary(mocks.puuid, mocks.matchId);
 
             expect(result?.player_timeline).toBeNull();
         });
@@ -271,7 +271,7 @@ describe('Player Summary Service', () => {
             (riotService.getMatchDetailsByMatchID as jest.Mock).mockResolvedValueOnce(mockMatchDetails);
             (riotService.getMatchTimelineByMatchID as jest.Mock).mockResolvedValueOnce(mockMatchTimeline);
 
-            const result = await getPlayerSummary(mocks.puuid, mocks.matchid);
+            const result = await getPlayerSummary(mocks.puuid, mocks.matchId);
 
             expect(result?.player_timeline?.length).toBeGreaterThan(0);
             const firstFrame = result?.player_timeline?.[0];
@@ -292,7 +292,7 @@ describe('Player Summary Service', () => {
             (riotService.getMatchDetailsByMatchID as jest.Mock).mockResolvedValueOnce(mockMatchDetails);
             (riotService.getMatchTimelineByMatchID as jest.Mock).mockResolvedValueOnce(mockMatchTimeline);
 
-            const result = await getPlayerSummary(mocks.puuid, mocks.matchid);
+            const result = await getPlayerSummary(mocks.puuid, mocks.matchId);
 
             const secondFrame = result?.player_timeline?.[1];
             expect(secondFrame?.events).toContainEqual(
@@ -307,7 +307,7 @@ describe('Player Summary Service', () => {
             (riotService.getMatchDetailsByMatchID as jest.Mock).mockResolvedValueOnce(mockMatchDetails);
             (riotService.getMatchTimelineByMatchID as jest.Mock).mockResolvedValueOnce(mockMatchTimeline);
 
-            const result = await getPlayerSummary(mocks.puuid, mocks.matchid);
+            const result = await getPlayerSummary(mocks.puuid, mocks.matchId);
 
             const firstFrame = result?.player_timeline?.[0];
             expect(firstFrame?.events).toContainEqual(
@@ -324,7 +324,7 @@ describe('Player Summary Service', () => {
             (riotService.getMatchDetailsByMatchID as jest.Mock).mockResolvedValueOnce(mockMatchDetails);
             (riotService.getMatchTimelineByMatchID as jest.Mock).mockResolvedValueOnce(mockMatchTimeline);
 
-            const result = await getPlayerSummary(mocks.puuid, mocks.matchid);
+            const result = await getPlayerSummary(mocks.puuid, mocks.matchId);
 
             expect(result?.player_timeline?.[0]?.timestamp).toBe(1); // 60000 ms / 60000 = 1 minute
             expect(result?.player_timeline?.[1]?.timestamp).toBe(2); // 120000 ms / 60000 = 2 minutes
@@ -334,7 +334,7 @@ describe('Player Summary Service', () => {
             (riotService.getMatchDetailsByMatchID as jest.Mock).mockResolvedValueOnce(mockMatchDetails);
             (riotService.getMatchTimelineByMatchID as jest.Mock).mockResolvedValueOnce(mockMatchTimeline);
 
-            const result = await getPlayerSummary(mocks.puuid, mocks.matchid);
+            const result = await getPlayerSummary(mocks.puuid, mocks.matchId);
 
             const frameData = result?.player_timeline?.[0]?.participantFrames;
             expect(frameData).not.toHaveProperty('damageStats');
@@ -371,7 +371,7 @@ describe('Player Summary Service', () => {
             (riotService.getMatchDetailsByMatchID as jest.Mock).mockResolvedValueOnce(mockMatchDetails);
             (riotService.getMatchTimelineByMatchID as jest.Mock).mockResolvedValueOnce(timelineWithoutPlayer);
 
-            const result = await getPlayerSummary(mocks.puuid, mocks.matchid);
+            const result = await getPlayerSummary(mocks.puuid, mocks.matchId);
 
             expect(result?.player_timeline).toEqual([]);
         });
@@ -380,10 +380,10 @@ describe('Player Summary Service', () => {
             (riotService.getMatchDetailsByMatchID as jest.Mock).mockResolvedValueOnce(mockMatchDetails);
             (riotService.getMatchTimelineByMatchID as jest.Mock).mockResolvedValueOnce(mockMatchTimeline);
 
-            await getPlayerSummary(mocks.puuid, mocks.matchid);
+            await getPlayerSummary(mocks.puuid, mocks.matchId);
 
-            expect(riotService.getMatchDetailsByMatchID).toHaveBeenCalledWith(mocks.matchid);
-            expect(riotService.getMatchTimelineByMatchID).toHaveBeenCalledWith(mocks.matchid);
+            expect(riotService.getMatchDetailsByMatchID).toHaveBeenCalledWith(mocks.matchId);
+            expect(riotService.getMatchTimelineByMatchID).toHaveBeenCalledWith(mocks.matchId);
             expect(riotService.getMatchDetailsByMatchID).toHaveBeenCalledTimes(1);
             expect(riotService.getMatchTimelineByMatchID).toHaveBeenCalledTimes(1);
         });
@@ -392,7 +392,7 @@ describe('Player Summary Service', () => {
             (riotService.getMatchDetailsByMatchID as jest.Mock).mockResolvedValueOnce(mockMatchDetails);
             (riotService.getMatchTimelineByMatchID as jest.Mock).mockResolvedValueOnce(mockMatchTimeline);
 
-            const result = await getPlayerSummary(mocks.puuid, mocks.matchid);
+            const result = await getPlayerSummary(mocks.puuid, mocks.matchId);
 
             expect(result?.player_stats).toEqual(
                 expect.objectContaining({

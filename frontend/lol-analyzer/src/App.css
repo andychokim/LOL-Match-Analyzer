@@ -98,3 +98,49 @@
   margin-top: 0.5rem;
   font-size: 0.9rem;
 }
+
+.match-container {
+  padding: 0.5rem;
+}
+
+.match-details {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1.0rem;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.match-details:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.match-details h4 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.match-date {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.match-details button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+}
+
+.match-details button:hover {
+  background-color: #0056b3;
+}
+

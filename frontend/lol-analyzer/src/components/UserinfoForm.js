@@ -10,6 +10,7 @@ const UserinfoForm = () => {
     const { dispatch } = useAnalysisContext();
     const navigate = useNavigate();
 
+    // function to handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -38,6 +39,7 @@ const UserinfoForm = () => {
 
             const { puuid } = await response.json();
             console.log('Fetched summoner information successfully:', puuid);
+
             dispatch({ type: 'SET_PUUID', payload: puuid });
 
             setSummonerName('');

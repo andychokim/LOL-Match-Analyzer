@@ -8,7 +8,7 @@ const mocks = {
     puuid: 'mockID',
     name: 'mockName',
     tag: 'mockTag',
-    matchid: 'mockMatchID',
+    matchId: 'mockMatchID',
     stats: 'mockStats',
     timeline: 'mockTimeline',
 };
@@ -56,14 +56,14 @@ describe('Riot Routes', () => {
 
         it('should route to getRecentMatchesHandler ', async () => {
             (riotController.getRecentMatchesController as jest.Mock).mockImplementationOnce(async (_req, res) => {
-                res.status(200).json([mocks.matchid]);
+                res.status(200).json([mocks.matchId]);
             });
 
             const response = await request(app).get(`/api/riot/matches/${mocks.puuid}`);
 
             expect(response.status).toBe(200);
-            expect(response.body).toStrictEqual([mocks.matchid]);
-            expect(response.text).toContain(mocks.matchid);
+            expect(response.body).toStrictEqual([mocks.matchId]);
+            expect(response.text).toContain(mocks.matchId);
             expect(riotController.getRecentMatchesController).toHaveBeenCalledTimes(1);
         });
 
@@ -80,18 +80,18 @@ describe('Riot Routes', () => {
         });
     });
 
-    describe('GET /match/:matchid', () => {
+    describe('GET /match/:matchId', () => {
 
         it('should route to getMatchDetailsHandler ', async () => {
             (riotController.getMatchDetailsController as jest.Mock).mockImplementationOnce(async (_req, res) => {
-                res.status(200).json({ matchid: mocks.matchid });
+                res.status(200).json({ matchId: mocks.matchId });
             });
 
-            const response = await request(app).get(`/api/riot/match/${mocks.matchid}`);
+            const response = await request(app).get(`/api/riot/match/${mocks.matchId}`);
 
             expect(response.status).toBe(200);
-            expect(response.body).toStrictEqual({ matchid: mocks.matchid });
-            expect(response.text).toContain(mocks.matchid);
+            expect(response.body).toStrictEqual({ matchId: mocks.matchId });
+            expect(response.text).toContain(mocks.matchId);
             expect(riotController.getMatchDetailsController).toHaveBeenCalledTimes(1);
         });
 
@@ -100,7 +100,7 @@ describe('Riot Routes', () => {
                 res.status(500).json({ error: 'Internal server error' });
             });
 
-            const response = await request(app).get(`/api/riot/match/${mocks.matchid}`);
+            const response = await request(app).get(`/api/riot/match/${mocks.matchId}`);
             
             expect(response.status).toBe(500);
             expect(response.body).toEqual({ error: 'Internal server error' });
@@ -108,7 +108,7 @@ describe('Riot Routes', () => {
         });
     });
 
-    describe('GET /player-summary/:puuid/:matchid', () => {
+    describe('GET /player-summary/:puuid/:matchId', () => {
 
         it('should route to getPlayerSummaryHandler ', async () => {
             (riotController.getPlayerSummaryController as jest.Mock).mockImplementationOnce(async (_req, res) => {
@@ -119,7 +119,7 @@ describe('Riot Routes', () => {
             });
 
 
-            const response = await request(app).get(`/api/riot/player-summary/${mocks.puuid}/${mocks.matchid}`);
+            const response = await request(app).get(`/api/riot/player-summary/${mocks.puuid}/${mocks.matchId}`);
 
             expect(response.status).toBe(200);
             expect(response.body).toStrictEqual({ 
@@ -136,7 +136,7 @@ describe('Riot Routes', () => {
                 res.status(500).json({ error: 'Internal server error' });
             });
 
-            const response = await request(app).get(`/api/riot/player-summary/${mocks.puuid}/${mocks.matchid}`);
+            const response = await request(app).get(`/api/riot/player-summary/${mocks.puuid}/${mocks.matchId}`);
 
             expect(response.status).toBe(500);
             expect(response.body).toEqual({ error: 'Internal server error' });

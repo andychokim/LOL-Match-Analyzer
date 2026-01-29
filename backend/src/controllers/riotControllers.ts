@@ -51,15 +51,15 @@ export async function getRecentMatchesController(req: Request, res: Response) {
 
 /**
  * Get match details by match ID
- * @param req params: matchid
+ * @param req params: matchId
  * @param res json formatted match details for successful request, status code and error message for failed request
  */
 export async function getMatchDetailsController(req: Request, res: Response) {
-    const { matchid } = req.params;
-    console.log(`Fetching match details for Match ID: ${matchid}`);
+    const { matchId } = req.params;
+    console.log(`Fetching match details for Match ID: ${matchId}`);
 
     try {
-        const matchDetails = await getMatchDetailsByMatchID(matchid);
+        const matchDetails = await getMatchDetailsByMatchID(matchId);
         return res.status(200).json(matchDetails);
     }
     catch (error: unknown) {
@@ -74,22 +74,22 @@ export async function getMatchDetailsController(req: Request, res: Response) {
 /**
  * Get a player summary by PUUID and match ID
  * Fetches the player summary from the database if it exists, otherwise fetches it from the Riot API and saves it to the database.
- * @param req params: puuid, matchid
+ * @param req params: puuid, matchId
  * @param res json formatted player summary for successful request, status code and error message for failed request
  */
 export async function getPlayerSummaryController(req: Request, res: Response) {
-    const { puuid, matchid } = req.params;
+    const { puuid, matchId } = req.params;
 
     // // condition 1: check for any missing parameters
     // const missingParams = [];
     // if (!puuid) missingParams.push('puuid');
-    // if (!matchid) missingParams.push('matchid');
+    // if (!matchId) missingParams.push('matchId');
     // if (missingParams.length > 0) return res.status(400).json({ error: `Missing parameters: ${missingParams.join(', ')}` });
 
     try {
         // condition 1: if data found in database, return it
-        console.log(`Fetching player analysis for PUUID: ${puuid} and MatchID: ${matchid}`);
-        const data = await playerSummaryModel.findOne({ puuid:puuid, matchid:matchid });
+        console.log(`Fetching player analysis for PUUID: ${puuid} and MatchID: ${matchId}`);
+        const data = await playerSummaryModel.findOne({ puuid:puuid, matchId:matchId });
         
         if (data) {
             console.log('Previous data found - returning saved data');
@@ -99,10 +99,10 @@ export async function getPlayerSummaryController(req: Request, res: Response) {
         // if no data found in database, fetch from Riot API and save to database
         console.log('No previous data found - generating new analysis');
         try {
-            const analysisData = await getGroqChatCompletion(process.env.GROQ_MESSAGE, puuid, matchid);
+            const analysisData = await getGroqChatCompletion(process.env.GROQ_MESSAGE, puuid, matchId);
             const analysis = analysisData.choices[0]?.message?.content || '';
             if (analysis !== '') {
-                const result = await playerSummaryModel.create({ puuid, matchid, analysis });
+                const result = await playerSummaryModel.create({ puuid, matchId, analysis });
 
                 console.log('Player analysis generated and saved successfully');
                 return res.status(200).json(result.analysis);

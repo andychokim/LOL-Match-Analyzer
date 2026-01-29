@@ -1,7 +1,7 @@
 import './App.css';
 import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
-import MatchList from './pages/MatchList';
+import MatchSelect from './pages/MatchSelect';
 // import Analysis from './pages/Analysis';
 
 
@@ -11,7 +11,7 @@ function App() {
             <div className="pages">
                 <Routes>
                     <Route path="/" element={<Home />} />
-                    <Route path="/match-selection" element={<MatchList />} />
+                    <Route path="/match-selection" element={<MatchSelect />} />
                     {/* <Route path="/analysis" element={<Analysis />} /> */}
                 </Routes>
             </div>

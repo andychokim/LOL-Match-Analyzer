@@ -10,7 +10,7 @@ jest.mock('groq-sdk');
 
 const mocks = {
     puuid: 'mockPUUID',
-    matchid: 'mockMatchID',
+    matchId: 'mockMatchID',
     message: 'Analyze this player performance',
     playerSummary: {
         player_stats: {
@@ -90,10 +90,10 @@ describe('Groq Analysis Service', () => {
                 },
             }));
 
-            await getGroqChatCompletion(mocks.message, mocks.puuid, mocks.matchid);
+            await getGroqChatCompletion(mocks.message, mocks.puuid, mocks.matchId);
 
             expect(getPlayerSummary).toHaveBeenCalledTimes(1);
-            expect(getPlayerSummary).toHaveBeenCalledWith(mocks.puuid, mocks.matchid);
+            expect(getPlayerSummary).toHaveBeenCalledWith(mocks.puuid, mocks.matchId);
         });
 
         it('should return a valid chat completion response', async () => {
@@ -108,7 +108,7 @@ describe('Groq Analysis Service', () => {
                 },
             }));
 
-            const response = await getGroqChatCompletion(mocks.message, mocks.puuid, mocks.matchid);
+            const response = await getGroqChatCompletion(mocks.message, mocks.puuid, mocks.matchId);
 
             expect(response).toEqual(mocks.groqResponse);
             expect(response.choices).toBeDefined();
@@ -129,7 +129,7 @@ describe('Groq Analysis Service', () => {
                 },
             }));
 
-            await getGroqChatCompletion(mocks.message, mocks.puuid, mocks.matchid);
+            await getGroqChatCompletion(mocks.message, mocks.puuid, mocks.matchId);
 
             // Verify that groq.chat.completions.create was called
             expect(mockCreate).toHaveBeenCalledTimes(1);
@@ -152,7 +152,7 @@ describe('Groq Analysis Service', () => {
                 },
             }));
 
-            await getGroqChatCompletion(undefined, mocks.puuid, mocks.matchid);
+            await getGroqChatCompletion(undefined, mocks.puuid, mocks.matchId);
 
             expect(mockCreate).toHaveBeenCalledTimes(1);
             const callArgs = mockCreate.mock.calls[0][0];
@@ -164,7 +164,7 @@ describe('Groq Analysis Service', () => {
             (getPlayerSummary as jest.Mock).mockRejectedValueOnce(error);
 
             await expect(
-                getGroqChatCompletion(mocks.message, mocks.puuid, mocks.matchid)
+                getGroqChatCompletion(mocks.message, mocks.puuid, mocks.matchId)
             ).rejects.toThrow('Failed to fetch player summary');
 
             expect(getPlayerSummary).toHaveBeenCalledTimes(1);
@@ -184,7 +184,7 @@ describe('Groq Analysis Service', () => {
             }));
 
             await expect(
-                getGroqChatCompletion(mocks.message, mocks.puuid, mocks.matchid)
+                getGroqChatCompletion(mocks.message, mocks.puuid, mocks.matchId)
             ).rejects.toThrow('Groq API error');
         });
 
@@ -200,7 +200,7 @@ describe('Groq Analysis Service', () => {
                 },
             }));
 
-            await getGroqChatCompletion(mocks.message, mocks.puuid, mocks.matchid);
+            await getGroqChatCompletion(mocks.message, mocks.puuid, mocks.matchId);
 
             const callArgs = mockCreate.mock.calls[0][0];
             expect(callArgs.model).toBe('llama-3.1-8b-instant');
@@ -218,7 +218,7 @@ describe('Groq Analysis Service', () => {
                 },
             }));
 
-            await getGroqChatCompletion(mocks.message, mocks.puuid, mocks.matchid);
+            await getGroqChatCompletion(mocks.message, mocks.puuid, mocks.matchId);
 
             const callArgs = mockCreate.mock.calls[0][0];
             expect(callArgs.messages[0].role).toBe('user');
