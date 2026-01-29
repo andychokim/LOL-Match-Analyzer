@@ -1,6 +1,6 @@
 import UserinfoForm from "../components/UserinfoForm"
 
-const Home = () => {
+const HomePage = () => {
 
     return (
         <div className="home">
@@ -13,4 +13,4 @@ const Home = () => {
     )
 }
 
-export default Home;
+export default HomePage;

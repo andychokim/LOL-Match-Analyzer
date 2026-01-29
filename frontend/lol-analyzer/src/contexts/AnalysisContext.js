@@ -13,7 +13,7 @@ export const analysisReducer = (state, action) => {
         case 'SET_PUUID':
             return { ...state, puuid: action.payload }
         case 'SET_MATCH':
-            return { ...state, match: action.payload }
+            return { ...state, matchId: action.payload }
         case 'RESET':
             return initialState;
         default:

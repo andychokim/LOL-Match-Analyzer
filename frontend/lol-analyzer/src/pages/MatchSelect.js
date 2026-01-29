@@ -1,6 +1,6 @@
 import MatchList from "../components/MatchList";
 
-const MatchSelect = () => {
+const MatchSelectPage = () => {
 
     return (
         <div className="match-select">
@@ -10,4 +10,4 @@ const MatchSelect = () => {
     );
 };
 
-export default MatchSelect;
+export default MatchSelectPage;

@@ -1,8 +1,8 @@
 import './App.css';
 import { Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
-import MatchSelect from './pages/MatchSelect';
-// import Analysis from './pages/Analysis';
+import HomePage from './pages/Home';
+import MatchSelectPage from './pages/MatchSelect';
+import MatchAnalysis from './pages/MatchAnalysis';
 
 
 function App() {
@@ -10,9 +10,9 @@ function App() {
         <div className="App">
             <div className="pages">
                 <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/match-selection" element={<MatchSelect />} />
-                    {/* <Route path="/analysis" element={<Analysis />} /> */}
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/match-selection" element={<MatchSelectPage />} />
+                    <Route path="/analysis" element={<MatchAnalysis />} />
                 </Routes>
             </div>
         </div >

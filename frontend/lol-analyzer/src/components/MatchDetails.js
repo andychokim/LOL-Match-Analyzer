@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAnalysisContext } from '../hooks/useAnalysisContext';
 
 const MatchDetails = ({ matchId }) => {
     const [matchDetails, setMatchDetails] = useState(null);
     const [error, setError] = useState(null);
     const { puuid, dispatch } = useAnalysisContext();
+    const navigate = useNavigate();
 
     // fetch match details on component mount
     useEffect(() => {
@@ -52,6 +54,7 @@ const MatchDetails = ({ matchId }) => {
     const handleClick = () => {
         dispatch({ type: 'SET_MATCH', payload: matchId });
         console.log('Selected match:', matchId);
+        navigate('/analysis');
     };
 
     return (
