@@ -21,7 +21,6 @@ const UserinfoForm = () => {
 
         if (errors.length > 0) {
             setEmptyFields(errors);
-            setError('Please fill in all fields');
             return;
         }
 
@@ -55,26 +54,32 @@ const UserinfoForm = () => {
 
     return (
         <form className='signIn' onSubmit={handleSubmit}>
-            <h3>Provide your Summoner Name and Tagline</h3>
+            <div className="form-group">
+                <label>Summoner Name:</label>
+                <input
+                    type="text"
+                    value={summonerName}
+                    onChange={(e) => setSummonerName(e.target.value)}
+                    className={emptyFields.includes('summonerName') ? 'error' : ''}
+                    placeholder="Your summoner name"
+                />
+                {emptyFields.includes('summonerName') && <div className="error">Summoner name is required</div>}
+            </div>
 
-            <label>Summoner Name:</label>
-            <input
-                type="text"
-                value={summonerName}
-                onChange={(e) => setSummonerName(e.target.value)}
-                className={emptyFields.includes('summonerName') ? 'error' : ''}
-            />
-
-            <label>Tagline:</label>
-            <input
-                type="text"
-                value={tagline}
-                onChange={(e) => setTagline(e.target.value)}
-                className={emptyFields.includes('tagline') ? 'error' : ''}
-            />
+            <div className="form-group">
+                <label>Tagline:</label>
+                <input
+                    type="text"
+                    value={tagline}
+                    onChange={(e) => setTagline(e.target.value)}
+                    className={emptyFields.includes('tagline') ? 'error' : ''}
+                    placeholder="Your tagline (e.g., NA1)"
+                />
+                {emptyFields.includes('tagline') && <div className="error">Tagline is required</div>}
+            </div>
 
             <button type="submit">Submit</button>
-            {error && <div className="error">{error}</div>}
+            {error && <div className="error" style={{ marginTop: '1rem' }}>{error}</div>}
         </form>
     )
 }
