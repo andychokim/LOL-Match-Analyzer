@@ -10,20 +10,21 @@ import { APIError } from '../errors/APIError';
  * @param req params: summonerName, tagLine
  * @param res json formatted puuid for successful request, status code and error message for failed request
  */
-export async function getPUUIDController(req: Request, res: Response) {
+export async function getPUUIDController(req: Request, res: Response): Promise<Response> {
     const { summonerName, tagLine } = req.params;
+    
     console.log(`Fetching PUUID for ${summonerName}#${tagLine}`);
-
     try {
         const data = await getPUUIDBySummonerNameAndTag(summonerName, tagLine);
-        res.status(200).json(data);
+
+        return res.status(200).json(data);
     }
     catch (error: unknown) {
         const apiError = error as APIError;
         const statusCode = apiError?.status || 500;
         const message = apiError?.statusText || 'Internal Server Error';
 
-        res.status(statusCode).json({ error: `${statusCode}: ${message}` });
+        return res.status(statusCode).json({ error: `${statusCode}: ${message}` });
     }
 };
 
@@ -32,12 +33,13 @@ export async function getPUUIDController(req: Request, res: Response) {
  * @param req params: puuid
  * @param res json formatted array of match IDs for successful request, status code and error message for failed request
  */
-export async function getRecentMatchesController(req: Request, res: Response) {
+export async function getRecentMatchesController(req: Request, res: Response): Promise<Response> {
     const { puuid } = req.params;
-    console.log(`Fetching recent matches for PUUID: ${puuid}`);
     
+    console.log(`Fetching recent matches for PUUID: ${puuid}`);
     try {
         const matches = await getRecentMatchesByPUUID(puuid);
+
         return res.status(200).json(matches);
     }
     catch (error: unknown) {
@@ -54,12 +56,13 @@ export async function getRecentMatchesController(req: Request, res: Response) {
  * @param req params: matchId
  * @param res json formatted match details for successful request, status code and error message for failed request
  */
-export async function getMatchDetailsController(req: Request, res: Response) {
+export async function getMatchDetailsController(req: Request, res: Response): Promise<Response> {
     const { matchId } = req.params;
+    
     console.log(`Fetching match details for Match ID: ${matchId}`);
-
     try {
         const matchDetails = await getMatchDetailsByMatchID(matchId);
+
         return res.status(200).json(matchDetails);
     }
     catch (error: unknown) {
@@ -77,14 +80,8 @@ export async function getMatchDetailsController(req: Request, res: Response) {
  * @param req params: puuid, matchId
  * @param res json formatted player summary for successful request, status code and error message for failed request
  */
-export async function getPlayerSummaryController(req: Request, res: Response) {
+export async function getPlayerSummaryController(req: Request, res: Response): Promise<Response> {
     const { puuid, matchId } = req.params;
-
-    // // condition 1: check for any missing parameters
-    // const missingParams = [];
-    // if (!puuid) missingParams.push('puuid');
-    // if (!matchId) missingParams.push('matchId');
-    // if (missingParams.length > 0) return res.status(400).json({ error: `Missing parameters: ${missingParams.join(', ')}` });
 
     try {
         // condition 1: if data found in database, return it
@@ -93,6 +90,7 @@ export async function getPlayerSummaryController(req: Request, res: Response) {
         
         if (data) {
             console.log('Previous data found - returning saved data');
+
             return res.status(200).json(data.analysis);
         }
 
@@ -105,6 +103,7 @@ export async function getPlayerSummaryController(req: Request, res: Response) {
                 const result = await playerSummaryModel.create({ puuid, matchId, analysis });
 
                 console.log('Player analysis generated and saved successfully');
+                
                 return res.status(200).json(result.analysis);
             }
             else {
