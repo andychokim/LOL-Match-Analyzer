@@ -10,4 +10,5 @@ export default {
   },
   preset: 'ts-jest',
   setupFilesAfterEnv: ['<rootDir>/jest.setup.cjs'],
+  testPathIgnorePatterns: ['/dist/', '/node_modules/'],
 };
