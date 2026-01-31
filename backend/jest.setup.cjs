@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 // Jest setup file for tests
 // Set required environment variables for tests
 process.env.GROQ_MESSAGE = process.env.GROQ_MESSAGE || 'mock-groq-message';
