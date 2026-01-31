@@ -33,6 +33,7 @@ frontend/lol-analyzer/.env.production.local
 
 # Testing
 frontend/lol-analyzer/coverage/
+backend/coverage/
 
 # OS files
 .DS_Store
