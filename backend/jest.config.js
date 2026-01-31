@@ -9,4 +9,5 @@ export default {
     ...tsJestTransformCfg,
   },
   preset: 'ts-jest',
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
 };
