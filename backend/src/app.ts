@@ -1,7 +1,7 @@
 import express, { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
-import heroRoutes from './routes/heroRoutes';
-import riotRoutes from './routes/riotRoutes';
+import heroRoutes from './routes/heroRoutes.js';
+import riotRoutes from './routes/riotRoutes.js';
 
 // express app
 const app = express();
