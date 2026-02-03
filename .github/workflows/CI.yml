@@ -1,7 +1,7 @@
 # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code, and run tests across different versions of node
 # For more information, see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
 
-name: Backend CI
+name: CI
 
 on:
   push:
@@ -10,8 +10,8 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-
+  job1:
+    name: "Backend CI"
     runs-on: ubuntu-latest
 
     strategy:
@@ -41,3 +41,31 @@ jobs:
     - name: Test backend
       run: npm test
       working-directory: ./backend
+
+  job2:
+    name: "Frontend CI"
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [22.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: |
+          frontend/lol-analyzer/package-lock.json
+    - name: Install frontend dependencies
+      run: npm ci
+      working-directory: ./frontend/lol-analyzer
+    - name: Lint frontend
+      run: npm run lint
+      working-directory: ./frontend/lol-analyzer
+    - name: Build frontend
+      run: npm run build
+      working-directory: ./frontend/lol-analyzer
