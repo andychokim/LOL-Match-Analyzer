@@ -1,5 +1,5 @@
 import express from 'express';
-import * as riotController from '../controllers/riotControllers';
+import * as riotController from '../controllers/riotControllers.js';
 
 const router = express.Router();
 
