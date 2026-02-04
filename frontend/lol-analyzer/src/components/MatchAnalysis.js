@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAnalysisContext } from "../hooks/useAnalysisContext";
+import { API_URL } from "../config";
 
 const MatchAnalysis = () => {
     const [analysis, setAnalysis] = useState(null);
@@ -15,7 +16,7 @@ const MatchAnalysis = () => {
         const fetchAnalysis = async () => {
 
             try {
-                const response = await fetch(`/api/riot/player-summary/${puuid}/${matchId}`);
+                const response = await fetch(`${API_URL}/api/riot/player-summary/${puuid}/${matchId}`);
 
                 if (!response.ok) {
                     console.error('Error fetching match analysis:', response.statusText);
@@ -27,7 +28,7 @@ const MatchAnalysis = () => {
                 console.log('Fetched match analysis successfully:', data);
             }
             catch (err) {
-                setError('Failed to connect to server. Make sure backend is running on port 5000.');
+                setError(`Failed to connect to server. Make sure backend is running at ${API_URL}.`);
                 console.error('Fetch error:', err);
             }
         };

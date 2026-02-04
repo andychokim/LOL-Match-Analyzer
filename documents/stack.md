@@ -10,9 +10,11 @@ This document explains this project's stack.
 - **TypeScript:** Its static typing provides a better maintainability of the backend codebase.
 
 ## Database
-
-## AI Library Engine
+- **MongoDB Atlas** My program's requirements are not asking for relational, complex data types. I decided to utilize MongoDB's simple implementation/connection and noSQL based features.
 
 ## Frontend
+
+
+## AI Library Engine
 
 

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAnalysisContext } from '../hooks/useAnalysisContext';
+import { API_URL } from '../config';
 
 // components
 import MatchDetails from '../components/MatchDetails';
@@ -16,7 +17,7 @@ const MatchList = () => {
         const fetchMatches = async () => {
 
             try {
-                const response = await fetch(`/api/riot/matches/${puuid}`);
+                const response = await fetch(`${API_URL}/api/riot/matches/${puuid}`);
 
                 if (!response.ok) {
                     console.log('Error fetching match list:', response.statusText);
@@ -28,7 +29,7 @@ const MatchList = () => {
                 console.log('Fetched match list successfully:', data);
             }
             catch (err) {
-                setError('Failed to connect to server. Make sure backend is running on port 5000.');
+                setError(`Failed to connect to server. Make sure backend is running at ${API_URL}.`);
                 console.error('Fetch error:', err);
             }
         };

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAnalysisContext } from '../hooks/useAnalysisContext';
+import { API_URL } from '../config';
 
 const UserinfoForm = () => {
     const [summonerName, setSummonerName] = useState('');
@@ -25,7 +26,7 @@ const UserinfoForm = () => {
         }
 
         try {
-            const response = await fetch(`/api/riot/summoner/${summonerName}/${tagline}`);
+            const response = await fetch(`${API_URL}/api/riot/summoner/${summonerName}/${tagline}`);
 
             if (!response.ok) {
                 const errorData = await response.json();
@@ -47,7 +48,7 @@ const UserinfoForm = () => {
             setEmptyFields([]);
             navigate('/match-selection');
         } catch (err) {
-            setError('Failed to connect to server. Make sure backend is running on port 5000.');
+            setError(`Failed to connect to server. Make sure backend is running at ${API_URL}.`);
             console.error('Fetch error:', err);
         }
     }
