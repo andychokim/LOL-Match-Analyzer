@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { getMatchDetailsByMatchID, getPUUIDBySummonerNameAndTag, getRecentMatchesByPUUID } from '../services/riotService.js';
-import { getGroqChatCompletion } from '../services/groqAnalysisService.js';
-import { playerSummaryModel } from '../models/playerSummaryModel.js'; // playerSummary model for post operation
-import { APIError } from '../errors/APIError.js';
+import { getMatchDetailsByMatchID, getPUUIDBySummonerNameAndTag, getRecentMatchesByPUUID } from '../services/riotService';
+import { getGroqChatCompletion } from '../services/groqAnalysisService';
+import { playerSummaryModel } from '../models/playerSummaryModel'; // playerSummary model for post operation
+import { APIError } from '../errors/APIError';
 
 // controllers
 /**

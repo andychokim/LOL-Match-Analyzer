@@ -1,4 +1,4 @@
-import { getMatchDetailsByMatchID, getMatchTimelineByMatchID } from './riotService.js';
+import { getMatchDetailsByMatchID, getMatchTimelineByMatchID } from './riotService';
 
 interface PlayerDetails {
     champion: string;

@@ -1,5 +1,5 @@
 import Groq from 'groq-sdk';
-import { getPlayerSummary } from './playerSummaryService.js';
+import { getPlayerSummary } from './playerSummaryService';
 
 export async function getGroqChatCompletion(message: string | undefined, puuid: string, matchId: string): Promise<any> {
     

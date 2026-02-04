@@ -7,8 +7,8 @@
  * Version: 1.0.0
  */
 
-import { HEADERS, REGION } from '../config.js';
-import { APIError } from '../errors/APIError.js';
+import { HEADERS, REGION } from '../config';
+import { APIError } from '../errors/APIError';
 
 /**
  * Custom error class for Riot API errors.
