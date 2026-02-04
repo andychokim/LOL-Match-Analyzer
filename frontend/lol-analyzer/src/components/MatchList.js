@@ -4,8 +4,10 @@ import { useAnalysisContext } from '../hooks/useAnalysisContext';
 // components
 import MatchDetails from '../components/MatchDetails';
 
+
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 const MatchList = () => {
-    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
     const [matches, setMatches] = useState([]);
     const [error, setError] = useState(null);
     const { puuid } = useAnalysisContext();

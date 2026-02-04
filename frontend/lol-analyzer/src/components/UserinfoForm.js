@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAnalysisContext } from '../hooks/useAnalysisContext';
 
+
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 const UserinfoForm = () => {
-    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
     const [summonerName, setSummonerName] = useState('');
     const [tagline, setTagline] = useState('');
     const [error, setError] = useState(null);
