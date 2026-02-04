@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAnalysisContext } from "../hooks/useAnalysisContext";
-import { API_URL } from "../config";
 
 const MatchAnalysis = () => {
+    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
     const [analysis, setAnalysis] = useState(null);
     const [error, setError] = useState(null);
     const { puuid, matchId, dispatch } = useAnalysisContext();

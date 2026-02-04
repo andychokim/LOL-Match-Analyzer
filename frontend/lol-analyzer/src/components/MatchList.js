@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useAnalysisContext } from '../hooks/useAnalysisContext';
-import { API_URL } from '../config';
 
 // components
 import MatchDetails from '../components/MatchDetails';
 
 const MatchList = () => {
+    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
     const [matches, setMatches] = useState([]);
     const [error, setError] = useState(null);
     const { puuid } = useAnalysisContext();
