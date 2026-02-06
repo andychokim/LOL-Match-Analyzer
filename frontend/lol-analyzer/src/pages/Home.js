@@ -5,8 +5,8 @@ const HomePage = () => {
     return (
         <div className="home">
             <div className="logo-container">
-                <h1>Welcome to the LoL Analyzer</h1>
-                <p>Analyze your League of Legends matches and improve your gameplay!</p>
+                <h1>League of Legends Match Analyzer</h1>
+                <p>Powered with llama-3.1</p>
             </div>
             <UserinfoForm />
         </div>
