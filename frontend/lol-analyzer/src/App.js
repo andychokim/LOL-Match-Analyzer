@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import HomePage from './pages/Home';
 import MatchSelectPage from './pages/MatchSelect';
 import MatchAnalysis from './pages/MatchAnalysis';
+import Footer from './components/Footer';
 
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
                     <Route path="/analysis" element={<MatchAnalysis />} />
                 </Routes>
             </div>
+            <Footer />
         </div >
         
     );
