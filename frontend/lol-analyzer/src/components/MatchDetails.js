@@ -62,17 +62,16 @@ const MatchDetails = ({ matchId }) => {
 
     return (
         <div className='match-container'>
-            <div className='match-details'>
+            <div className='match-details' onClick={handleClick}>
                 {matchDetails ? (
                     <div>
-                        <p>Date: {matchDetails.gameDate}</p>
-                        <p>Champion: {matchDetails.championName} ({matchDetails.kills}/{matchDetails.deaths}/{matchDetails.assists})</p>
-                        <p>Result: {matchDetails.win ? 'Victory' : 'Defeat'}</p>
+                        <p>{matchDetails.gameDate}</p>
+                        <p>{matchDetails.championName} ({matchDetails.kills}/{matchDetails.deaths}/{matchDetails.assists})</p>
+                        <p>{matchDetails.win ? 'Victory' : 'Defeat'}</p>
                     </div>
                 ) : (
                     <p>Loading match details...</p>
                 )}
-                <button onClick={handleClick}>Analyze Match</button>
                 {error && <div className="error">{error}</div>}
             </div>
         </div>

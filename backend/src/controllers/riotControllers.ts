@@ -117,14 +117,14 @@ export async function getPlayerSummaryController(req: Request, res: Response): P
             const statusCode = apiError?.status || 500;
             const message = apiError?.statusText || 'Internal Server Error';
             
-            return res.status(statusCode).json({ error: `${statusCode}: ${message}` } );
+            return res.status(statusCode).json(`${statusCode}: ${message}`);
         }
     }
     catch (error: unknown) {
         const apiError = error as APIError;
         const statusCode = apiError?.status || 500;
-        const message = apiError?.statusText || 'Internal Server Error';
+        const message = apiError?.statusText || 'Internal Database Error';
 
-        return res.status(statusCode).json({ error: `${statusCode}: ${message}` } );
+        return res.status(statusCode).json(`${statusCode}: ${message}`);
     }
 };

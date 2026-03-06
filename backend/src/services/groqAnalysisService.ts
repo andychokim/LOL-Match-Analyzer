@@ -6,7 +6,7 @@ export async function getGroqChatCompletion(message: string | undefined, puuid: 
     try {
         const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
         const playerSummary = await getPlayerSummary(puuid, matchId);
-
+        
         return groq.chat.completions.create({
             model: 'llama-3.1-8b-instant', 
             messages: [

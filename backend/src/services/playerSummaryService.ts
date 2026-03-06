@@ -108,7 +108,6 @@ async function getPlayerTimeline(puuid: string, match_id: string): Promise<Frame
         let playerId: number | null = null;
 
         for (const player of match_events.info.participants) {
-
             if (player.puuid === puuid) {
                 playerId = player.participantId;
                 break;
@@ -137,7 +136,9 @@ async function getPlayerTimeline(puuid: string, match_id: string): Promise<Frame
                     ) {
                         delete event.killStreakLength;
                         delete event.victimDamageDealt;
+                        delete event.victimTeamfightDamageDealt;
                         delete event.victimDamageReceived;
+                        delete event.victimTeamfightDamageReceived;
                         player_events.push(event);
                     }
                 } else if (event.type === 'ELITE_MONSTER_KILL') {
@@ -173,8 +174,8 @@ async function getPlayerTimeline(puuid: string, match_id: string): Promise<Frame
                 delete player_data.championStats.omnivamp;
                 delete player_data.championStats.physicalVamp;
                 delete player_data.championStats.spellVamp;
-
-
+                
+                // add the frame's data (timestamp, player_events and player_data) to the timeline
                 frameData.push({
                     timestamp: frame_timestamp,
                     events: player_events,
@@ -182,6 +183,8 @@ async function getPlayerTimeline(puuid: string, match_id: string): Promise<Frame
                 });
             }
         }
+        console.log(JSON.stringify(frameData));
+
         return frameData;
     }
 
@@ -197,12 +200,11 @@ export async function getPlayerSummary(puuid: string, match_id: string): Promise
     const player_stats = await getPlayerDetails(puuid, match_id);
     const player_timeline = await getPlayerTimeline(puuid, match_id);
 
-    if (!player_stats) {
-        return null;
+    if (player_stats) {
+        return {
+            player_stats,
+            player_timeline,
+        };
     }
-
-    return {
-        player_stats,
-        player_timeline,
-    };
+    return null;
 };
