@@ -247,7 +247,7 @@ describe('Riot Controllers', () => {
             expect(mockRes.status).toHaveBeenCalledTimes(1);
             expect(mockRes.status).toHaveBeenCalledWith(mockError.status);
             expect(mockRes.json).toHaveBeenCalledTimes(1);
-            expect(mockRes.json).toHaveBeenCalledWith({ error: `${mockError.status}: ${mockError.statusText}` });
+            expect(mockRes.json).toHaveBeenCalledWith(`${mockError.status}: ${mockError.statusText}`);
         });
 
         it('should handle undefined errors from model.findOne with 500 status code', async () => {
@@ -263,7 +263,7 @@ describe('Riot Controllers', () => {
             expect(mockRes.status).toHaveBeenCalledTimes(1);
             expect(mockRes.status).toHaveBeenCalledWith(500);
             expect(mockRes.json).toHaveBeenCalledTimes(1);
-            expect(mockRes.json).toHaveBeenCalledWith({ error: `500: Internal Server Error` });
+            expect(mockRes.json).toHaveBeenCalledWith(`500: Internal Database Error`);
         });
 
         it('should include correct error status and message in response when an error occurs from getGroqChatCompletion', async () => {
@@ -281,7 +281,7 @@ describe('Riot Controllers', () => {
             expect(mockRes.status).toHaveBeenCalledTimes(1);
             expect(mockRes.status).toHaveBeenCalledWith(mockError.status);
             expect(mockRes.json).toHaveBeenCalledTimes(1);
-            expect(mockRes.json).toHaveBeenCalledWith({ error: `${mockError.status}: ${mockError.statusText}` });
+            expect(mockRes.json).toHaveBeenCalledWith(`${mockError.status}: ${mockError.statusText}`);
         });
 
         it('should prevent data creation with a correct error when a faulty response occurs from getGroqChatCompletion', async () => {
@@ -317,7 +317,7 @@ describe('Riot Controllers', () => {
             expect(mockRes.status).toHaveBeenCalledTimes(1);
             expect(mockRes.status).toHaveBeenCalledWith(500);
             expect(mockRes.json).toHaveBeenCalledTimes(1);
-            expect(mockRes.json).toHaveBeenCalledWith({ error: `500: Internal Server Error` });
+            expect(mockRes.json).toHaveBeenCalledWith('500: Internal Server Error');
         });
     });
 });

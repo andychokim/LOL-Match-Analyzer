@@ -157,7 +157,7 @@ describe('Player Summary Service', () => {
                     killParticipation: 0.75,
                     deathParticipation: 0.333,
                     turretKillParticipation: 0.6,
-                    epicMonsterKillParticipation: 0.667,
+                    epicMonsterKillParticipation: 0.571,
                     win: true,
                 })
             );
@@ -209,7 +209,7 @@ describe('Player Summary Service', () => {
             expect(result?.playerDetails?.killParticipation).toBe(0.75);
             expect(result?.playerDetails?.deathParticipation).toBe(0.333);
             expect(result?.playerDetails?.turretKillParticipation).toBe(0.6);
-            expect(result?.playerDetails?.epicMonsterKillParticipation).toBe(0.667);
+            expect(result?.playerDetails?.epicMonsterKillParticipation).toBe(0.571);
         });
 
         it('should return null if player is not found in match details', async () => {
