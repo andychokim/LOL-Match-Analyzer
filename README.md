@@ -4,7 +4,7 @@ A full-stack League of Legends match analysis app.
 
 The app takes a Riot ID (game name + tag), fetches recent matches, and generates a player-focused analysis for a selected match using an LLM.
 
-Live site: [https://andrewprojects-lolma.vercel.app/](https://andrewprojects-lolma.vercel.app/)
+Live site: [https://lolma.andrewkims.work](https://lolma.andrewkims.work)
 
 ## Features
 
