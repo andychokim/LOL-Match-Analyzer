@@ -16,12 +16,7 @@ type PlayerDetails = {
     win: boolean;
 }
 
-type PlayerAndTeamStats = {
-    teamStats: TeamStats;
-    playerDetails: PlayerDetails;
-}
-
-type timelineStats = {
+type TimelineStats = {
     championTakedowns: number;
     deaths: number;
     epicMonsterTakedowns: number;
@@ -29,13 +24,13 @@ type timelineStats = {
     platesTaken: number;
 }
 
-type playerTimelineStats = {
-    earlyGameStats: timelineStats;
-    midGameStats: timelineStats;
-    lateGameStats: timelineStats;
+type PlayerTimelineStats = {
+    earlyGameStats: TimelineStats;
+    midGameStats: TimelineStats;
+    lateGameStats: TimelineStats;
 }
 
 type PlayerSummary = {
     playerDetails: PlayerDetails | null;
-    playerTimeline: playerTimelineStats | null;
+    playerTimeline: PlayerTimelineStats | null;
 }

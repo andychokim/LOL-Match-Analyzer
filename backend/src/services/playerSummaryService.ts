@@ -8,35 +8,35 @@ import { getMatchDetailsByMatchID, getMatchTimelineByMatchID } from './riotServi
 async function getPlayerDetails(puuid: string, match_id: string): Promise<PlayerDetails | null> {
     // a Set of challenge keys to keep
     const CHALLENGES_KEEP_KEYS = new Set([
-        "earlyLaningPhaseGoldExpAdvantage",
-        "controlWardTimeCoverageInRiverOrEnemyHalf",
-        "hadAfkTeammate",
-        "laningPhaseGoldExpAdvantage",
-        "maxCsAdvantageOnLaneOpponent",
-        "maxLevelLeadLaneOpponent",
-        "soloTurretsLategame",
-        "takedownsFirst25Minutes",
-        "teleportTakedowns",
-        "visionScoreAdvantageLaneOpponent",
-        "controlWardsPlaced",
-        "firstTurretKilled",
-        "laneMinionsFirst10Minutes",
-        "takedownsAfterGainingLevelAdvantage",
-        "teamDamagePercentage",
+        'earlyLaningPhaseGoldExpAdvantage',
+        'controlWardTimeCoverageInRiverOrEnemyHalf',
+        'hadAfkTeammate',
+        'laningPhaseGoldExpAdvantage',
+        'maxCsAdvantageOnLaneOpponent',
+        'maxLevelLeadLaneOpponent',
+        'soloTurretsLategame',
+        'takedownsFirst25Minutes',
+        'teleportTakedowns',
+        'visionScoreAdvantageLaneOpponent',
+        'controlWardsPlaced',
+        'firstTurretKilled',
+        'laneMinionsFirst10Minutes',
+        'takedownsAfterGainingLevelAdvantage',
+        'teamDamagePercentage',
 
         // Jungler-specific challenges
-        "junglerKillsEarlyJungle",
-        "killsOnLanersEarlyJungleAsJungler",
-        "jungleCsBefore10Minutes",
+        'junglerKillsEarlyJungle',
+        'killsOnLanersEarlyJungleAsJungler',
+        'jungleCsBefore10Minutes',
 
         // to be removed after aggregation
-        "killParticipation",
-        "turretTakedowns",
-        "dragonTakedowns",
-        "baronTakedowns",
-        "teamBaronKills",
-        "riftHeraldTakedowns",
-        "teamRiftHeraldKills",
+        'killParticipation',
+        'turretTakedowns',
+        'dragonTakedowns',
+        'baronTakedowns',
+        'teamBaronKills',
+        'riftHeraldTakedowns',
+        'teamRiftHeraldKills',
     ]);
     const matchDetails = await getMatchDetailsByMatchID(match_id);
 
@@ -55,7 +55,7 @@ async function getPlayerDetails(puuid: string, match_id: string): Promise<Player
             turretKillParticipation: 0,
             epicMonsterKillParticipation: 0,
             win: player.win,
-        }
+        };
 
         const teamStats: TeamStats = {
             totalDeaths: 0,
@@ -76,7 +76,7 @@ async function getPlayerDetails(puuid: string, match_id: string): Promise<Player
                 const filteredChallenges: Record<string, any> = {};
                 for (const key in p.challenges) {
                     if (CHALLENGES_KEEP_KEYS.has(key)) {
-                        if (key === "teamDamagePercentage" || key === "visionScoreAdvantageLaneOpponent") {
+                        if (key === 'teamDamagePercentage' || key === 'visionScoreAdvantageLaneOpponent') {
                             filteredChallenges[key] = parseFloat(p.challenges[key].toFixed(3)); // round to 3 decimal places
                         } else {
                             filteredChallenges[key] = p.challenges[key];
@@ -93,7 +93,7 @@ async function getPlayerDetails(puuid: string, match_id: string): Promise<Player
         playerDetails.turretKillParticipation = parseFloat((playerDetails.challenge.turretTakedowns / teamStats.totalTurretKills).toFixed(3));
         playerDetails.epicMonsterKillParticipation = parseFloat(
             ((playerDetails.challenge.dragonTakedowns + playerDetails.challenge.baronTakedowns + playerDetails.challenge.riftHeraldTakedowns) / 
-            (teamStats.totalDragonKills + playerDetails.challenge.teamBaronKills + playerDetails.challenge.teamRiftHeraldKills)).toFixed(3)
+            (teamStats.totalDragonKills + playerDetails.challenge.teamBaronKills + playerDetails.challenge.teamRiftHeraldKills)).toFixed(3),
         );
 
         // remove unnecessary information to reduce size
@@ -115,7 +115,7 @@ async function getPlayerDetails(puuid: string, match_id: string): Promise<Player
  * Purpose is to extract early-game and late-game events and stats for the player, which can be used to analyze the player's performance and decision-making throughout the match.
  * @returns a list of frames containing events and in-game stats for the player.
  */
-async function getPlayerTimeline(puuid: string, match_id: string): Promise<playerTimelineStats | null> {
+async function getPlayerTimeline(puuid: string, match_id: string): Promise<PlayerTimelineStats | null> {
     const matchTimeline = await getMatchTimelineByMatchID(match_id);
 
     if (matchTimeline && matchTimeline.info) {
@@ -123,7 +123,7 @@ async function getPlayerTimeline(puuid: string, match_id: string): Promise<playe
         const playerId = player ? player.participantId : null; // need participantId to match events to the player
         if (!playerId) return null;
 
-        const playerTimeline: playerTimelineStats = {
+        const playerTimeline: PlayerTimelineStats = {
             earlyGameStats: {
                 championTakedowns: 0,
                 deaths: 0,
@@ -144,7 +144,7 @@ async function getPlayerTimeline(puuid: string, match_id: string): Promise<playe
                 epicMonsterTakedowns: 0,
                 turretTakedowns: 0,
                 platesTaken: 0,
-            }
+            },
         };
 
         // Iterate through each frame in the timeline
@@ -193,17 +193,24 @@ async function getPlayerTimeline(puuid: string, match_id: string): Promise<playe
  * @return player summary or null if player details not found.
  */
 export async function getPlayerSummary(puuid: string, match_id: string): Promise<PlayerSummary | null> {
+    const playerSummary: PlayerSummary = {
+        playerDetails: null,
+        playerTimeline: null,
+    };
     const playerDetails = await getPlayerDetails(puuid, match_id);
     const playerTimeline = await getPlayerTimeline(puuid, match_id);
 
-    const payloadString1 = JSON.stringify(playerDetails);
-    console.log(payloadString1);
-    console.log('@@@');
-    const payloadString2 = JSON.stringify(playerTimeline);
-    console.log(payloadString2);
+    // const payloadString1 = JSON.stringify(playerDetails);
+    // console.log(payloadString1);
+    // console.log('@@@');
+    // const payloadString2 = JSON.stringify(playerTimeline);
+    // console.log(payloadString2);
+    // console.log('Payload size:', (Buffer.byteLength(payloadString1) + Buffer.byteLength(payloadString2)), 'bytes');
 
-    console.log('Payload size:', (Buffer.byteLength(payloadString1) + Buffer.byteLength(payloadString2)), 'bytes');
-
-    if (playerDetails && playerTimeline) return { playerDetails, playerTimeline };
+    if (playerDetails && playerTimeline) {
+        playerSummary.playerDetails = playerDetails;
+        playerSummary.playerTimeline = playerTimeline;
+        return playerSummary;
+    };
     return null;
 };
