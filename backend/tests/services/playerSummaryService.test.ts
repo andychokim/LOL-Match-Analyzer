@@ -17,26 +17,21 @@ const mockMatchDetails = {
                 championName: 'Ahri',
                 teamPosition: 'MID',
                 champLevel: 18,
-                kills: 5,
                 deaths: 2,
-                assists: 10,
-                goldEarned: 15000,
-                totalDamageDealtToChampions: 45000,
-                visionScore: 35,
-                wardsPlaced: 20,
-                detectorWardsPlaced: 5,
-                totalMinionsKilled: 280,
-                neutralMinionsKilled: 20,
+                turretKills: 4,
+                dragonKills: 2,
+                teamId: 100,
                 win: true,
                 challenges: {
-                    teamDamagePercentage: 0.30,
+                    teamDamagePercentage: 0.30124,
+                    visionScoreAdvantageLaneOpponent: 0.55666,
                     killParticipation: 0.75,
-                    goldPerMinute: 450,
-                    soloKills: 2,
-                    maxCsAdvantageOnLaneOpponent: 50,
-                    maxLevelLeadLaneOpponent: 2,
-                    wardTakedowns: 8,
-                    visionScoreAdvantageLaneOpponent: 15,
+                    turretTakedowns: 3,
+                    dragonTakedowns: 2,
+                    baronTakedowns: 1,
+                    teamBaronKills: 2,
+                    riftHeraldTakedowns: 1,
+                    teamRiftHeraldKills: 2,
                     otherChallenge: 999, // Should be filtered out
                 },
             },
@@ -44,9 +39,23 @@ const mockMatchDetails = {
                 puuid: 'otherPUUID',
                 championName: 'Lux',
                 teamPosition: 'SUPPORT',
-                kills: 2,
                 deaths: 4,
-                assists: 15,
+                turretKills: 1,
+                dragonKills: 1,
+                teamId: 100,
+                win: true,
+                challenges: {},
+            },
+            {
+                puuid: 'enemyPUUID',
+                championName: 'Zed',
+                teamPosition: 'MID',
+                deaths: 8,
+                turretKills: 2,
+                dragonKills: 0,
+                teamId: 200,
+                win: false,
+                challenges: {},
             },
         ],
     },
@@ -57,96 +66,71 @@ const mockMatchTimeline = {
         participants: [
             {
                 puuid: mocks.puuid,
-                participantId: 0,
+                participantId: 1,
             },
             {
                 puuid: 'otherPUUID',
-                participantId: 1,
+                participantId: 2,
             },
         ],
         frames: [
             {
-                timestamp: 60000, // 1 minute
                 events: [
                     {
                         type: 'CHAMPION_KILL',
                         timestamp: 30000,
-                        killerId: 0,
-                        victimId: 1,
+                        killerId: 1,
+                        victimId: 2,
                         assistingParticipantIds: [],
-                        killStreakLength: 1,
-                        victimDamageDealt: 100,
-                        victimDamageReceived: 200,
                     },
                     {
                         type: 'ELITE_MONSTER_KILL',
                         timestamp: 45000,
-                        killerId: 0,
-                        position: { x: 100, y: 200 },
-                        monsterSubType: 'DRAGON',
+                        killerId: 1,
+                    },
+                    {
+                        type: 'BUILDING_KILL',
+                        timestamp: 50000,
+                        killerId: 1,
+                    },
+                    {
+                        type: 'TURRET_PLATE_DESTROYED',
+                        timestamp: 55000,
+                        participantId: 1,
                     },
                 ],
-                participantFrames: {
-                    '0': {
-                        championStats: {
-                            health: 500,
-                            bonusArmorPenPercent: 0.1,
-                            bonusMagicPenPercent: 0.2,
-                            healthMax: 600,
-                            healthRegen: 2,
-                            lifesteal: 0,
-                            omnivamp: 0,
-                            physicalVamp: 0,
-                            spellVamp: 0,
-                        },
-                        currentGold: 1500,
-                        damageStats: { mockDamageStats: 'data' },
-                        goldPerSecond: 25,
-                        minionsKilled: 20,
-                        jungleMinionsKilled: 2,
-                        totalGold: 3000,
-                        xp: 5000,
-                        timeEnemySpentControlled: 0,
-                    },
-                },
             },
             {
-                timestamp: 120000, // 2 minutes
                 events: [
                     {
                         type: 'CHAMPION_KILL',
-                        timestamp: 90000,
-                        killerId: 1,
-                        victimId: 0,
+                        timestamp: 1200000,
+                        killerId: 2,
+                        victimId: 1,
                         assistingParticipantIds: [],
-                        killStreakLength: 1,
-                        victimDamageDealt: 150,
-                        victimDamageReceived: 300,
+                    },
+                    {
+                        type: 'ELITE_MONSTER_KILL',
+                        timestamp: 1210000,
+                        killerId: 1,
                     },
                 ],
-                participantFrames: {
-                    '0': {
-                        championStats: {
-                            health: 300,
-                            bonusArmorPenPercent: 0.1,
-                            bonusMagicPenPercent: 0.2,
-                            healthMax: 600,
-                            healthRegen: 2,
-                            lifesteal: 0,
-                            omnivamp: 0,
-                            physicalVamp: 0,
-                            spellVamp: 0,
-                        },
-                        currentGold: 2000,
-                        damageStats: { mockDamageStats: 'data' },
-                        goldPerSecond: 30,
-                        minionsKilled: 40,
-                        jungleMinionsKilled: 3,
-                        totalGold: 4000,
-                        xp: 6000,
-                        timeEnemySpentControlled: 5,
+            },
+            {
+                events: [
+                    {
+                        type: 'CHAMPION_KILL',
+                        timestamp: 2500000,
+                        killerId: 1,
+                        victimId: 2,
+                        assistingParticipantIds: [],
                     },
-                },
+                    {
+                        type: 'BUILDING_KILL',
+                        timestamp: 2510000,
+                        killerId: 1,
+                    },
+                ],
             },
         ],
     },
@@ -158,31 +142,74 @@ describe('Player Summary Service', () => {
     });
 
     describe('getPlayerSummary', () => {
-        it('should return complete player summary with stats and timeline', async () => {
+        it('should return player details and phase-based timeline aggregates', async () => {
             (riotService.getMatchDetailsByMatchID as jest.Mock).mockResolvedValueOnce(mockMatchDetails);
             (riotService.getMatchTimelineByMatchID as jest.Mock).mockResolvedValueOnce(mockMatchTimeline);
 
             const result = await getPlayerSummary(mocks.puuid, mocks.matchId);
 
             expect(result).not.toBeNull();
-            expect(result?.player_stats).toBeDefined();
-            expect(result?.player_timeline).toBeDefined();
+            expect(result?.playerDetails).toEqual(
+                expect.objectContaining({
+                    champion: 'Ahri',
+                    role: 'MID',
+                    champLevel: 18,
+                    killParticipation: 0.75,
+                    deathParticipation: 0.333,
+                    turretKillParticipation: 0.6,
+                    epicMonsterKillParticipation: 0.667,
+                    win: true,
+                })
+            );
 
-            // Verify player_stats
-            expect(result?.player_stats?.champion).toBe('Ahri');
-            expect(result?.player_stats?.role).toBe('MID');
-            expect(result?.player_stats?.kills).toBe(5);
-            expect(result?.player_stats?.deaths).toBe(2);
-            expect(result?.player_stats?.assists).toBe(10);
-            expect(result?.player_stats?.win).toBe(true);
+            expect(result?.playerDetails?.challenge).toEqual(
+                expect.objectContaining({
+                    teamDamagePercentage: 0.301,
+                    visionScoreAdvantageLaneOpponent: 0.557,
+                })
+            );
+            expect(result?.playerDetails?.challenge).not.toHaveProperty('otherChallenge');
+            expect(result?.playerDetails?.challenge).not.toHaveProperty('killParticipation');
+            expect(result?.playerDetails?.challenge).not.toHaveProperty('turretTakedowns');
 
-            // Verify cs calculation (totalMinionsKilled + neutralMinionsKilled)
-            expect(result?.player_stats?.cs).toBe(300);
+            expect(result?.playerTimeline).toEqual(
+                expect.objectContaining({
+                    earlyGameStats: {
+                        championTakedowns: 1,
+                        deaths: 0,
+                        epicMonsterTakedowns: 1,
+                        turretTakedowns: 1,
+                        platesTaken: 1,
+                    },
+                    midGameStats: {
+                        championTakedowns: 0,
+                        deaths: 1,
+                        epicMonsterTakedowns: 1,
+                        turretTakedowns: 0,
+                        platesTaken: 0,
+                    },
+                    lateGameStats: {
+                        championTakedowns: 1,
+                        deaths: 0,
+                        epicMonsterTakedowns: 0,
+                        turretTakedowns: 1,
+                        platesTaken: 0,
+                    },
+                })
+            );
+        });
 
-            // Verify challenges are filtered correctly
-            expect(result?.player_stats?.challenge).toHaveProperty('teamDamagePercentage');
-            expect(result?.player_stats?.challenge).toHaveProperty('killParticipation');
-            expect(result?.player_stats?.challenge).not.toHaveProperty('otherChallenge');
+        it('should calculate and expose expected participation metrics', async () => {
+            (riotService.getMatchDetailsByMatchID as jest.Mock).mockResolvedValueOnce(mockMatchDetails);
+            (riotService.getMatchTimelineByMatchID as jest.Mock).mockResolvedValueOnce(mockMatchTimeline);
+
+            const result = await getPlayerSummary(mocks.puuid, mocks.matchId);
+
+            expect(result?.playerDetails?.champion).toBe('Ahri');
+            expect(result?.playerDetails?.killParticipation).toBe(0.75);
+            expect(result?.playerDetails?.deathParticipation).toBe(0.333);
+            expect(result?.playerDetails?.turretKillParticipation).toBe(0.6);
+            expect(result?.playerDetails?.epicMonsterKillParticipation).toBe(0.667);
         });
 
         it('should return null if player is not found in match details', async () => {
@@ -217,32 +244,23 @@ describe('Player Summary Service', () => {
             expect(result).toBeNull();
         });
 
-        it('should handle empty timeline when no relevant events found', async () => {
+        it('should return default-zero timeline buckets when no relevant events are found', async () => {
             const emptyTimelineData = {
                 info: {
                     participants: [
                         {
                             puuid: mocks.puuid,
-                            participantId: 0,
+                            participantId: 1,
                         },
                     ],
                     frames: [
                         {
-                            timestamp: 60000,
                             events: [
                                 {
                                     type: 'ITEM_PURCHASED',
-                                    killerId: 0,
+                                    killerId: 1,
                                 },
                             ],
-                            participantFrames: {
-                                '0': {
-                                    championStats: {
-                                        health: 500,
-                                    },
-                                    currentGold: 1500,
-                                },
-                            },
                         },
                     ],
                 },
@@ -253,7 +271,29 @@ describe('Player Summary Service', () => {
 
             const result = await getPlayerSummary(mocks.puuid, mocks.matchId);
 
-            expect(result?.player_timeline).toEqual([]);
+            expect(result?.playerTimeline).toEqual({
+                earlyGameStats: {
+                    championTakedowns: 0,
+                    deaths: 0,
+                    epicMonsterTakedowns: 0,
+                    turretTakedowns: 0,
+                    platesTaken: 0,
+                },
+                midGameStats: {
+                    championTakedowns: 0,
+                    deaths: 0,
+                    epicMonsterTakedowns: 0,
+                    turretTakedowns: 0,
+                    platesTaken: 0,
+                },
+                lateGameStats: {
+                    championTakedowns: 0,
+                    deaths: 0,
+                    epicMonsterTakedowns: 0,
+                    turretTakedowns: 0,
+                    platesTaken: 0,
+                },
+            });
         });
 
         it('should return null if timeline info is missing', async () => {
@@ -264,89 +304,7 @@ describe('Player Summary Service', () => {
 
             const result = await getPlayerSummary(mocks.puuid, mocks.matchId);
 
-            expect(result?.player_timeline).toBeNull();
-        });
-
-        it('should extract CHAMPION_KILL events where player is killer', async () => {
-            (riotService.getMatchDetailsByMatchID as jest.Mock).mockResolvedValueOnce(mockMatchDetails);
-            (riotService.getMatchTimelineByMatchID as jest.Mock).mockResolvedValueOnce(mockMatchTimeline);
-
-            const result = await getPlayerSummary(mocks.puuid, mocks.matchId);
-
-            expect(result?.player_timeline?.length).toBeGreaterThan(0);
-            const firstFrame = result?.player_timeline?.[0];
-            expect(firstFrame?.events).toContainEqual(
-                expect.objectContaining({
-                    type: 'CHAMPION_KILL',
-                    killerId: 0,
-                })
-            );
-            // Verify timestamps are removed
-            expect(firstFrame?.events?.[0]).not.toHaveProperty('timestamp');
-            // Verify unnecessary properties are removed
-            expect(firstFrame?.events?.[0]).not.toHaveProperty('killStreakLength');
-            expect(firstFrame?.events?.[0]).not.toHaveProperty('victimDamageDealt');
-        });
-
-        it('should extract CHAMPION_KILL events where player is victim', async () => {
-            (riotService.getMatchDetailsByMatchID as jest.Mock).mockResolvedValueOnce(mockMatchDetails);
-            (riotService.getMatchTimelineByMatchID as jest.Mock).mockResolvedValueOnce(mockMatchTimeline);
-
-            const result = await getPlayerSummary(mocks.puuid, mocks.matchId);
-
-            const secondFrame = result?.player_timeline?.[1];
-            expect(secondFrame?.events).toContainEqual(
-                expect.objectContaining({
-                    type: 'CHAMPION_KILL',
-                    victimId: 0,
-                })
-            );
-        });
-
-        it('should extract ELITE_MONSTER_KILL events', async () => {
-            (riotService.getMatchDetailsByMatchID as jest.Mock).mockResolvedValueOnce(mockMatchDetails);
-            (riotService.getMatchTimelineByMatchID as jest.Mock).mockResolvedValueOnce(mockMatchTimeline);
-
-            const result = await getPlayerSummary(mocks.puuid, mocks.matchId);
-
-            const firstFrame = result?.player_timeline?.[0];
-            expect(firstFrame?.events).toContainEqual(
-                expect.objectContaining({
-                    type: 'ELITE_MONSTER_KILL',
-                })
-            );
-            // Verify unnecessary properties are removed
-            expect(firstFrame?.events?.[1]).not.toHaveProperty('position');
-            expect(firstFrame?.events?.[1]).not.toHaveProperty('monsterSubType');
-        });
-
-        it('should convert frame timestamps from ms to minutes', async () => {
-            (riotService.getMatchDetailsByMatchID as jest.Mock).mockResolvedValueOnce(mockMatchDetails);
-            (riotService.getMatchTimelineByMatchID as jest.Mock).mockResolvedValueOnce(mockMatchTimeline);
-
-            const result = await getPlayerSummary(mocks.puuid, mocks.matchId);
-
-            expect(result?.player_timeline?.[0]?.timestamp).toBe(1); // 60000 ms / 60000 = 1 minute
-            expect(result?.player_timeline?.[1]?.timestamp).toBe(2); // 120000 ms / 60000 = 2 minutes
-        });
-
-        it('should remove unnecessary participant frame data to reduce size', async () => {
-            (riotService.getMatchDetailsByMatchID as jest.Mock).mockResolvedValueOnce(mockMatchDetails);
-            (riotService.getMatchTimelineByMatchID as jest.Mock).mockResolvedValueOnce(mockMatchTimeline);
-
-            const result = await getPlayerSummary(mocks.puuid, mocks.matchId);
-
-            const frameData = result?.player_timeline?.[0]?.participantFrames;
-            expect(frameData).not.toHaveProperty('damageStats');
-            expect(frameData).not.toHaveProperty('goldPerSecond');
-            expect(frameData).not.toHaveProperty('minionsKilled');
-            expect(frameData).not.toHaveProperty('jungleMinionsKilled');
-            expect(frameData).not.toHaveProperty('totalGold');
-            expect(frameData).not.toHaveProperty('xp');
-            expect(frameData).not.toHaveProperty('timeEnemySpentControlled');
-            expect(frameData?.championStats).not.toHaveProperty('bonusArmorPenPercent');
-            expect(frameData?.championStats).not.toHaveProperty('bonusMagicPenPercent');
-            expect(frameData?.championStats).not.toHaveProperty('healthMax');
+            expect(result).toBeNull();
         });
 
         it('should handle player not found in timeline', async () => {
@@ -355,14 +313,12 @@ describe('Player Summary Service', () => {
                     participants: [
                         {
                             puuid: 'differentPUUID',
-                            participantId: 0,
+                            participantId: 1,
                         },
                     ],
                     frames: [
                         {
-                            timestamp: 60000,
                             events: [],
-                            participantFrames: {},
                         },
                     ],
                 },
@@ -373,7 +329,7 @@ describe('Player Summary Service', () => {
 
             const result = await getPlayerSummary(mocks.puuid, mocks.matchId);
 
-            expect(result?.player_timeline).toEqual([]);
+            expect(result).toBeNull();
         });
 
         it('should call getMatchDetailsByMatchID and getMatchTimelineByMatchID', async () => {
@@ -386,32 +342,6 @@ describe('Player Summary Service', () => {
             expect(riotService.getMatchTimelineByMatchID).toHaveBeenCalledWith(mocks.matchId);
             expect(riotService.getMatchDetailsByMatchID).toHaveBeenCalledTimes(1);
             expect(riotService.getMatchTimelineByMatchID).toHaveBeenCalledTimes(1);
-        });
-
-        it('should extract all required player stats fields', async () => {
-            (riotService.getMatchDetailsByMatchID as jest.Mock).mockResolvedValueOnce(mockMatchDetails);
-            (riotService.getMatchTimelineByMatchID as jest.Mock).mockResolvedValueOnce(mockMatchTimeline);
-
-            const result = await getPlayerSummary(mocks.puuid, mocks.matchId);
-
-            expect(result?.player_stats).toEqual(
-                expect.objectContaining({
-                    champion: 'Ahri',
-                    role: 'MID',
-                    champLevel: 18,
-                    kills: 5,
-                    deaths: 2,
-                    assists: 10,
-                    totalGold: 15000,
-                    totalDamage: 45000,
-                    visionScore: 35,
-                    wardsPlaced: 20,
-                    detectorWardsPlaced: 5,
-                    cs: 300,
-                    win: true,
-                    challenge: expect.any(Object),
-                })
-            );
         });
     });
 });
