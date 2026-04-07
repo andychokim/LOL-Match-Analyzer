@@ -34,7 +34,7 @@ on:
 
 jobs:
   deploy:
-    name: Deploy
+    name: Deploy Backend to EC2
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     environment: production

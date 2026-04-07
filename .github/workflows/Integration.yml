@@ -11,7 +11,7 @@ on:
 
 jobs:
   job1:
-    name: "Backend CI"
+    name: "Backend Integration"
     runs-on: ubuntu-latest
 
     strategy:
@@ -43,7 +43,7 @@ jobs:
       working-directory: ./backend
 
   job2:
-    name: "Frontend CI"
+    name: "Frontend Integration"
     runs-on: ubuntu-latest
 
     strategy:

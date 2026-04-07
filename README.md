@@ -130,6 +130,27 @@ cd frontend/lol-analyzer
 npm test
 ```
 
+## Deployment Gate (GitHub Actions -> Vercel)
+
+Production deployment is configured to run only after the `Integration` workflow succeeds on `main`.
+
+- Workflow file: `.github/workflows/vercel_production.yml`
+- Vercel config: `frontend/lol-analyzer/vercel.json`
+- Trigger: `workflow_run` after `Integration` is `completed`
+- Gate: runs only when `github.event.workflow_run.conclusion == 'success'`
+- Direct Git deployments from `main` are disabled with `git.deploymentEnabled.main = false`
+
+Required GitHub repository secrets:
+
+- `VERCEL_TOKEN`
+- `VERCEL_ORG_ID`
+- `VERCEL_PROJECT_ID`
+
+Important Vercel dashboard setting:
+
+- If your Vercel project root is `frontend/lol-analyzer`, the `vercel.json` in that directory will prevent `main` pushes from triggering a Git-based deployment.
+- Production deploys should come only from the gated GitHub Actions workflow.
+
 ## Legacy Python Implementation
 
 `backend/python_legacy/` contains the older Python-based server and analysis pipeline kept for reference and migration history.

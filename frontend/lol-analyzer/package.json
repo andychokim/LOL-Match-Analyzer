@@ -18,9 +18,10 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "test": "react-scripts test",
     "build": "react-scripts build",
-    "test": "react-scripts test"
+    "start": "react-scripts start"
   },
   "eslintConfig": {
     "extends": [
