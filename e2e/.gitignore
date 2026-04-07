@@ -1,0 +1,6 @@
+# Playwright artifacts and test results
+playwright-report/
+test-results/
+artifacts/
+.auth/
+node_modules/

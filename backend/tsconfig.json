@@ -20,7 +20,6 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "moduleResolution": "node",
     "types": ["jest", "node"]
   },
   "include": ["src/**/*", "tests/**/*"],

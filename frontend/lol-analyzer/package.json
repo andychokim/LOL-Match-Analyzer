@@ -21,9 +21,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
-    "eject": "react-scripts eject"
-  },
+    "e2e": "playwright test",
+    "e2e:ui": "playwright test --ui",
+    "
   "eslintConfig": {
     "extends": [
       "react-app",
